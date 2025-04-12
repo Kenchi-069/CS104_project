@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div id="matchInfo"></div>
+    <div id="tossInfo"></div>
+    <div id="batsman1">
+        <form>
+            <label for="batsman1Name">Striker Batter name:</label><br>
+            <input type="text" id="striker" name="striker"><br>
+        </form>
+    </div>
+    <div id="batsman2">
+        <form>
+            <label for="batsman2Name">Non-Striker Batter name:</label><br>
+            <input type="text" id="nstriker" name="nstriker"><br>
+        </form>
+    </div>
+    <div id="bowler">
+        <form>
+            <label for="bowlerName">Bowler name:</label><br>
+            <input type="text" id="bowlerName" name="bowlerName"><br>
+        </form>
+    </div><br><br>
+    <input type="button" value="Start Match" id="startMatch" onclick="runMatch()"><br><br>
+    <div id="ball">
+        <input type="button" value="Ball" id="ballButton">
+    </div>
+    <div id="runs">
+        <form>
+            <label for="runs">Runs:</label><br>
+            <input type="radio" class="runs" name="runs" value="0">0<br>
+            <input type="radio" class="runs" name="runs" value="1">1<br>
+            <input type="radio" class="runs" name="runs" value="2">2<br>
+            <input type="radio" class="runs" name="runs" value="3">3<br>
+            <input type="radio" class="runs" name="runs" value="4">4<br>
+            <input type="radio" class="runs" name="runs" value="6">6<br>
+            <input type="radio" class="runs" name="runs" value="W">Wicket<br>
+        </form>
+        <input type="button" value="Submit" id="submitButton" onclick="submitRun()"><br><br>
+    </div>
+    <div id="scoreboard"></div>
+</body>
+<script src="score.js"></script>
+</html>
