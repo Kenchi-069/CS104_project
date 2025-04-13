@@ -12,33 +12,25 @@
         <form>
             <label for="batsman1Name">Striker Batter name:</label><br>
             <input type="text" id="striker" name="striker"><br>
+            <button id="setcBatter">Set Batter</button>
         </form>
-    </div>
-    <div id="newBatterPrompt" style="display: none;">
-        <form>
-            <label for="newBatterName">New Batter name:</label><br>
-            <input type="text" id="newBatter" name="newBatter"><br>
-        </form>
-        <input type="button" value="Submit" id="submitNewBatter" onclick="submitNewBatter()"><br><br>
     </div>
     <div id="batsman2">
         <form>
             <label for="batsman2Name">Non-Striker Batter name:</label><br>
             <input type="text" id="nstriker" name="nstriker"><br>
+            <button id="setnBatter">Set Non-striker Batter</button>
         </form>
     </div>
     <div id="bowler">
         <form>
             <label for="bowlerName">Bowler name:</label><br>
             <input type="text" id="bowlerName" name="bowlerName"><br>
+            <button id="setBowler">Set Bowler</button>
         </form>
     </div><br><br>
-    <button onclick="startInnings()">Start Match</button>
-    <div id="ball">
-        <input type="button" value="Ball" id="ballButton">
-    </div>
     <div id="runs">
-        <form>
+        <form id="runsForm">
             <label for="runs">Runs:</label><br>
             <input type="radio" class="runs" name="runs" value="0">0<br>
             <input type="radio" class="runs" name="runs" value="1">1<br>
@@ -46,9 +38,9 @@
             <input type="radio" class="runs" name="runs" value="3">3<br>
             <input type="radio" class="runs" name="runs" value="4">4<br>
             <input type="radio" class="runs" name="runs" value="6">6<br>
-            <input type="radio" class="runs" name="runs" value="W">Wicket<br>
+            <input type="radio" class="runs" name="runs" value="-1">Wicket<br>
+            <button type="submit">Submit</button>
         </form>
-        <input type="button" value="Submit" id="submitButton" onclick="submitRun()"><br><br>
     </div>
     <div id="scoreboard"></div>
 </body>
