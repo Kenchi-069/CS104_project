@@ -1,10 +1,18 @@
-class Batsman {
+class Batter {
     constructor(name, runs, balls, fours, sixes) {
         this.name = name;
         this.runs = runs;
         this.balls = balls;
         this.fours = fours;
         this.sixes = sixes;
+    }
+    addRun(run){
+        this.runs+=run;
+        if(run === 4) this.fours+=1;
+        else if(run === 6) this.sixes+=1;
+    }
+    addBall(){
+        this.balls+=1;
     }
 }
 
@@ -15,242 +23,240 @@ class Bowler {
         this.runs = runs;
         this.wickets = wickets;
     }
+    addRun(run){
+        this.runs+=run;
+    }
+    addWicket(){
+        this.wickets+=1;
+    }
 }
 
 class Team {
-    constructor(name, batsmans, bowlers, runs, balls, wickets, active, played) {
+    constructor(name, batters, bowlers, balls, runs, wickets, batting, played) {
         this.name = name;
-        this.batsmans = batsmans;
+        this.batters = batters;
         this.bowlers = bowlers;
-        this.runs = runs;
         this.balls = balls;
+        this.runs = runs;
         this.wickets = wickets;
-        this.active = active;
+        this.batting = batting;
         this.played = played;
     }
-
-    addBatsman(name, runs, balls, fours, sixes) {
-        this.batsmans.push(new Batsman(name, runs, balls, fours, sixes));
+    addBatter(batter) {
+        this.batters.push(batter);
+        console.log(batter);
     }
-    addBowler(name, overs, runs, wickets) {
-        this.bowlers.push(new Bowler(name, overs, runs, wickets));
+    addBowler(bowler) {
+        this.bowlers.push(bowler);
+        console.log(bowler);
     }
-    crr() {
-        if (this.balls == 0) return 0;
-        return (this.runs / this.balls) * 6;
+    addBall() {
+        this.balls++;
+    }
+    addRun(run) {
+        this.runs += run;
+    }
+    addWicket() {
+        this.wickets++;
+    }
+    getScore() {
+        return `${this.runs}/${this.wickets} in ${Math.floor(this.balls / 6)}.${this.balls % 6} overs`;
+    }
+    crr(){
+        return (this.runs/this.balls)*6;
+    }
+    rrr(run){
+        let ans = (run-this.runs)/(overs-(this.balls/6));
+        if (ans > 0) return ans;
+        else return 0;
     }
 }
-
 let team1, team2;
-let strikerIndex = 0;
-let nstrikerIndex = 1;
-let currentBowlerIndex = 0;
-let totalBalls = 0;
-let balls = 12;
+let sBatter = 0, nBatter = 1, cBowler = 0;
+let active, inactive;
 let overs = 2;
+document.addEventListener('DOMContentLoaded', () => {
 
-function clearRunSelection() {
-    document.querySelectorAll('input[name="runs"]').forEach(r => r.checked = false);
-}
+    const startMatch = document.getElementById("startMatch");
 
-function startMatch() {
-    team1 = new Team(document.getElementById("team1").value, [], [], 0, 0, 0, 0, 0);
-    team2 = new Team(document.getElementById("team2").value, [], [], 0, 0, 0, 0, 0);
-    let toss = document.getElementById("toss").value;
-    let tossResult = document.getElementById("toss_d").value;
-    if (team1.name == "" || team2.name == "" || toss == "" || tossResult == "") {
-        alert("Please fill all fields");
-        return;
-    }
-    if (tossResult == "bat") {
-        team1.active = toss == "team1";
-        team2.active = toss == "team2";
-    } else {
-        team1.active = toss == "team2";
-        team2.active = toss == "team1";
-    }
+    if(startMatch) {startMatch.addEventListener('click', (event) => {
+        event.preventDefault(); 
+        const toss = document.getElementById("toss").value;
+        const tossResult = document.getElementById("tossResult").value
+        team1 = new Team(document.getElementById("team1").value, [], [], 0, 0, 0, 0, 0);
+        team2 = new Team(document.getElementById("team2").value, [], [], 0, 0, 0, 0, 0);
 
-    localStorage.setItem("team1", JSON.stringify(team1));
-    localStorage.setItem("team2", JSON.stringify(team2));
-    localStorage.setItem("toss", toss);
-    localStorage.setItem("tossResult", tossResult);
-
-    try {
-        if (!window.location.href.includes("live.html")) {
-            window.location.href = "./live.html";
-        }
-    } catch (error) {
-        console.error("Error navigating to live.html:", error);
-    }
-}
-
-function storeRun(event) {
-    event.preventDefault();
-    let active = team1.active ? team1 : team2;
-    let inactive = team1.active ? team2 : team1;
-    let selectedRun = document.querySelector('input[name="runs"]:checked');
-
-    if (!selectedRun) {
-        alert("Please select a run value");
-        return;
-    }
-
-    let runValue = selectedRun.value;
-
-    if (runValue === "W") {
-        handleWicket();
-    } else {
-        let run = parseInt(runValue);
-        active.runs += run;
-        active.batsmans[strikerIndex].runs += run;
-        active.batsmans[strikerIndex].balls++;
-        inactive.bowlers[currentBowlerIndex].runs += run;
-
-        if (run % 2) {
-            let temp = strikerIndex;
-            strikerIndex = nstrikerIndex;
-            nstrikerIndex = temp;
-        }
-
-        totalBalls++;
-        active.balls++;
-    }
-
-    updateScoreboard();
-    clearRunSelection();
-
-    if (totalBalls >= balls || active.wickets === 2) {
-        if (active.played === 0) {
-            alert("First innings over");
-            changeInnings();
-        } else {
-            alert("Match over");
-            declareWinner();
-        }
-    }
-}
-
-function handleWicket() {
-    let active = team1.active ? team1 : team2;
-    let inactive = team1.active ? team2 : team1;
-    active.wickets++;
-    active.batsmans[strikerIndex].balls++;
-    inactive.bowlers[currentBowlerIndex].wickets++;
-    strikerIndex++;
-
-    if (strikerIndex == 10) {
-        alert("All out");
-        return;
-    }
-
-    alert("Wicket taken. New batsman comes in.");
-}
-
-function submitNewBatter(team1, team2) {
-    let active = team1.active ? team1 : team2;
-    document.getElementById("newBatterPrompt").style.display = "block";
-    let newBatsmanName = document.getElementById("newBatsman").value;
-    active.addBatsman(newBatsmanName, 0, 0, 0, 0);
-    strikerIndex = active.batsmans.length - 1;
-    document.getElementById("newBatterPrompt").style.display = "none";
-    updateScoreboard();
-}
-
-function startInnings() {
-    let striker = document.getElementById("striker").value;
-    let nstriker = document.getElementById("ntriker").value;
-    let bowler = document.getElementById("bowler").value;
-
-    let active = team1.active ? team1 : team2;
-    let inactive = team1.active ? team2 : team1;
-
-    active.addBatsman(striker, 0, 0, 0, 0);
-    active.addBatsman(nstriker, 0, 0, 0, 0);
-    inactive.addBowler(bowler, 0, 0, 0);
-
-    document.getElementById("batsman1").style.display = "none";
-    document.getElementById("batsman2").style.display = "none";
-    document.getElementById("bowler").style.display = "none";
-
-    runMatch();
-}
-
-function runMatch() {
-    let active = team1.active ? team1 : team2;
-    let inactive = team1.active ? team2 : team1;
-
-    while (totalBalls < balls) {
-        if (active.balls == balls) {
-            alert("Innings over");
-            break;
-        }
-        if (totalBalls % 6 == 0) {
-            currentBowlerIndex++;
-            if (currentBowlerIndex == inactive.bowlers.length) {
-                alert("All bowlers bowled");
-                break;
+        if (toss === "team1") {
+            if (tossResult === "bat") {
+                team1.batting = 1;
+                team2.batting = 0;            
+            }
+            else {
+                team1.batting = 0;
+                team2.batting = 1;
             }
         }
-        if (totalBalls % 2 == 0) {
-            let temp = strikerIndex;
-            strikerIndex = nstrikerIndex;
-            nstrikerIndex = temp;
+        else {
+            if (tossResult === "bowl") {
+                team1.batting = 0;
+                team2.batting = 1;
+            }
+            else {
+                team1.batting = 1;
+                team2.batting = 0;
+            }
         }
-        updateScoreboard();
+        console.log(`Match started: ${team1.name} vs ${team2.name}`);
+        console.log(`Toss won by: ${toss} and chose to ${tossResult}`);
+
+        localStorage.setItem("team1", JSON.stringify(team1));
+        localStorage.setItem("team2", JSON.stringify(team2));
+        localStorage.setItem("toss", toss);
+        localStorage.setItem("tossResult", tossResult);
+        window.location.href = "live.html";
+    });}
+    team1 = JSON.parse(localStorage.getItem("team1"));
+    team2 = JSON.parse(localStorage.getItem("team2"));
+    active = team1.batting === 1 ? new Team(
+        team1.name, team1.batters, team1.bowlers, team1.balls, team1.runs, team1.wickets, team1.batting, team1.played) : new Team(
+        team2.name, team2.batters, team2.bowlers, team2.balls, team2.runs, team2.wickets, team2.batting, team2.played
+    );
+    inactive = team1.batting === 1 ? new Team(
+        team2.name, team2.batters, team2.bowlers, team2.balls, team2.runs, team2.wickets, team2.batting, team2.played) : new Team(
+        team1.name, team1.batters, team1.bowlers, team1.balls, team1.runs, team1.wickets, team1.batting, team1.played
+    );
+    console.log("Loaded team1:", team1);
+    console.log("Loaded team2:", team2);
+    const storeRun = document.getElementById("playBall");
+    const batsman1 = document.getElementById("batsman1");
+    const batsman2 = document.getElementById("batsman2");
+    const bowler = document.getElementById("bowler");
+    const strikerBtn = document.getElementById("setcBatter");
+    const strikerInput = document.getElementById("striker");
+    const nStrikerBtn = document.getElementById("setnBatter");
+    const nonStrikerInput = document.getElementById("nstriker");
+    const bowlerBtn = document.getElementById("setBowler");
+    const bowlerInput = document.getElementById("bowlerName");
+
+
+
+    if(storeRun) {
+        storeRun.addEventListener('click', (event) => {
+        event.preventDefault();
+
+
+        if (document.getElementById("bowlerName").style.display === "block") return;
+        if (batsman1.style.display === "block") return;
+        if (batsman2.style.display === "block") return;
+
+        const selectedRun = document.querySelector('input[name="runs"]:checked');
+        console.log(selectedRun);
+
+        if (selectedRun) {
+            const run = parseInt(selectedRun.value)
+            console.log(`Ball ${active.balls + 1}: ${selectedRun.value} run(s) | Total: ${active.runs} | Bowler: ${inactive.bowlers[cBowler].name} | Current run rate: ${active.crr()}`);
+            active.addBall();
+            if (run === -1) {
+                active.addWicket();
+                active.batters[sBatter].addBall();
+                inactive.bowlers[cBowler].addWicket();
+                console.log(`Wicket! ${active.batters[sBatter].name} is out.`);
+                batsman1.style.display = "block";
+                sBatter = active.batters.length - 1;
+            }
+            else {
+                active.runs += run
+                active.batters[sBatter].addRun(run);
+                active.batters[sBatter].addBall();
+                inactive.bowlers[cBowler].addRun(run);
+                if (run%2 === 1) {
+                    let temp = sBatter;
+                    sBatter = nBatter;
+                    nBatter = temp;
+                }
+            }
+            if(inactive.played) console.log(`Required run rate: ${active.rrr(inactive.runs)}`);
+            console.log("I reach just before")
+            if(!active.played && (active.balls === overs*6 || active.wickets === 10)) {
+                console.log("I am inside of changing the batting and bowling")
+                if(!inactive.played){
+                    active.played = 1;
+                    team1 = team1.batting ? active : inactive;
+                    team2 = team2.batting ? active : inactive;
+                    active = team1.played ? team2 : team1;
+                    inactive = team1.played ? team1 : team2;
+                    batsman1.style.display = "block";
+                    batsman2.style.display = "block";
+                    document.getElementById("bowlerName").style.display = "block";
+                    sBatter = 0; 
+                    nBatter = 1;
+                    cBowler = 0;
+                }
+                else {
+                    console.log("Match is finished. Redirecting.....");
+                    windows.location.href = "summary.html";
+                }
+            }
+            if (active.balls % 6 === 0) {
+                bowler.style.display = "block";
+                cBowler++;
+                let temp = sBatter;
+                sBatter = nBatter;
+                nBatter = temp;
+            }
+            selectedRun.checked = false;
+        } else {
+            console.log("No run selected.");
+        }
+    });
     }
-}
 
-function changeInnings() {
-    let active = team1.active ? team1 : team2;
-    let inactive = team1.active ? team2 : team1;
+    strikerBtn.addEventListener('click', (event) => {
+        event.preventDefault(); 
 
-    active.active = false;
-    inactive.active = true;
-    active.played = 1;
+    
+        const name = strikerInput.value.trim(); 
+        if (name !== "") {
+            const striker = new Batter(name, 0, 0, 0, 0);
+            console.log("Striker batter set to: " + name);
+            active.addBatter(striker);
+            batsman1.style.display = "none";
+        } else {
+            console.log("No name entered for striker.");
+        }
+    });
 
-    strikerIndex = 0;
-    nstrikerIndex = 1;
-    currentBowlerIndex = 0;
-    totalBalls = 0;
-    balls = overs * 6;
+    nStrikerBtn.addEventListener('click', (event) => {
+        event.preventDefault(); // Prevent form from reloading the page
 
-    updateScoreboard();
+        const name = nonStrikerInput.value.trim(); // Get value from the input box
+        if (name !== "") {
+            // Create a new batter with the entered name
+            const nStriker = new Batter(name, 0, 0, 0, 0);
+            console.log("Non-striker batter set to: " + name);
+            active.addBatter(nStriker);
+            batsman2.style.display = "none";
+        } else {
+            console.log("No name entered for non-striker.");
+        }
+    });
 
-    document.getElementById("batsman1").style.display = "block";
-    document.getElementById("batsman2").style.display = "block";
-    document.getElementById("bowler").style.display = "block";
-
-    alert("Second innings setup: Enter new batters and bowler, then click Start Match");
-}
-
-function updateScoreboard() {
-    let active = team1.active ? team1 : team2;
-    let inactive = team1.active ? team2 : team1;
-    let scoreboard = document.getElementById("scoreboard");
-    scoreboard.innerHTML += `
-        <h2>${active.name} vs ${inactive.name}</h2>
-        <h3>${active.runs}/${active.wickets} in ${active.balls} balls</h3>
-        <h4>Current Run Rate: ${active.crr().toFixed(2)}</h4>
-        <h4>Overs: ${Math.floor(active.balls / 6)}.${active.balls % 6}</h4>
-        <h4>Striker: ${active.batsmans[strikerIndex].name} (${active.batsmans[strikerIndex].runs})</h4>
-        <h4>Non-Striker: ${active.batsmans[nstrikerIndex].name} (${active.batsmans[nstrikerIndex].runs})</h4>
-        <h4>Bowler: ${inactive.bowlers[currentBowlerIndex].name}</h4>
-        <h4>Total Balls: ${totalBalls}</h4>
-    `;
-}
-
-function declareWinner() {
-    let result = "";
-
-    if (team1.runs > team2.runs) {
-        result = `${team1.name} wins by ${team1.runs - team2.runs} runs`;
-    } else if (team2.runs > team1.runs) {
-        let remainingWickets = 2 - team2.wickets;
-        result = `${team2.name} wins by ${remainingWickets} wicket${remainingWickets !== 1 ? "s" : ""}`;
-    } else {
-        result = "Match tied!";
-    }
-
-    alert(result);
-}
-
+    bowlerBtn.addEventListener('click', (event) => {
+        event.preventDefault(); 
+    
+        const name = bowlerInput.value.trim();
+        if (name !== "") {
+            const bowler = new Bowler(name, 0, 0, 0);
+            console.log("Bowler set to: " + name);
+            inactive.addBowler(bowler);
+            const bowlerInputElement = document.getElementById("bowlerName");
+            if (bowlerInputElement) {
+                bowlerInputElement.closest('div').style.display = "none";
+            } else {
+                console.log("Bowler input element not found.");
+            }
+        } else {
+            console.log("No name entered for bowler.");
+        }
+    });
+});
