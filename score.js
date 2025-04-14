@@ -227,11 +227,10 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     nStrikerBtn.addEventListener('click', (event) => {
-        event.preventDefault(); // Prevent form from reloading the page
+        event.preventDefault();
 
-        const name = nonStrikerInput.value.trim(); // Get value from the input box
+        const name = nonStrikerInput.value.trim();
         if (name !== "") {
-            // Create a new batter with the entered name
             const nStriker = new Batter(name, 0, 0, 0, 0);
             console.log("Non-striker batter set to: " + name);
             active.addBatter(nStriker);
