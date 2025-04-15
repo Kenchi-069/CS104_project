@@ -307,8 +307,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     scoreboardBtn.addEventListener('click', (event) => {
         event.preventDefault();
-        updateScoreboard();
         window.location.href = "scoreboard.html";
+        updateScoreboard();
     });
 
     liveBtn.addEventListener('click', (event) =>{
@@ -365,6 +365,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     <th>Maidens</th>
                     <th>Runs conceded</th>
                     <th>Wickets Taken</th>
+                    <th>Economy Rate</th>
                 </tr>
                 <tr>
                     <td>${cBowler+1}</td>
@@ -374,6 +375,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     <td>${inactive.bowlers[cBowler].maidens}</td>
                     <td>${inactive.bowlers[cBowler].runs}</td>
                     <td>${inactive.bowlers[cBowler].wickets}</td>
+                    <td>${!inactive.bowlers[cBowler].runs/inactive.bowlers[cBowler].overs ? 0 :  inactive.bowlers[cBowler].runs/inactive.bowlers[cBowler].balls*6}</td>
                 </tr>
             </table>
             `
@@ -382,6 +384,8 @@ document.addEventListener('DOMContentLoaded', () => {
     function updateScoreboard() {
         const BtBody = document.getElementById("batsmanBody");
         BtBody.innerHTML = ""; 
+        const BwBody = document.getElementById("bowlerBody");
+        BwBody.innerHTML = "";
         const allBatters = [...active.batters, ...inactive.batters];
         const allBowlers = [...inactive.bowlers, ...active.bowlers];
 
@@ -402,7 +406,18 @@ document.addEventListener('DOMContentLoaded', () => {
         });
         i = 1;
         allBowlers.forEach(bowler => {
-            
+            BwBody.innerHTML += `
+                <tr>
+                    <td>${i++}</td>
+                    <td>${bowler.name}</td>
+                    <td>${bowler.team}</td>
+                    <td>${bowler.overs}</td>
+                    <td>${bowler.maidens}</td>
+                    <td>${bowler.runs}</td>
+                    <td>${bowler.wickets}</td>
+                    <td>${!bowler.runs/bowler.overs ? 0 :  (bowler.runs/bowler.overs*6).toFixed(2)}</td>
+                </tr>
+            `;
         });
     }
     
