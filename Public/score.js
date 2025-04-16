@@ -1,4 +1,101 @@
-import {Batter, Bowler, Team} from './classes.js';
+class Batter {
+    constructor(name, runs, balls, fours, sixes, team) {
+        this.name = name;
+        this.runs = runs;
+        this.balls = balls;
+        this.fours = fours;
+        this.sixes = sixes;
+        this.team = team;
+    }
+    addRun(run){
+        this.runs+=run;
+        if(run === 4) this.fours+=1;
+        else if(run === 6) this.sixes+=1;
+    }
+    addBall(){
+        this.balls+=1;
+    }
+    crr(){
+        return this.balls ? (this.runs/this.balls)*6 : 0;
+    }
+}
+
+class Bowler {
+    constructor(name, balls, overs, runs, wickets, team) {
+        this.name = name;
+        this.balls = balls;
+        this.overs = overs;
+        this.runs = runs;
+        this.wickets = wickets;
+        this.team = team;
+        this.maidens = 0;
+        this.currentOverRuns = 0;
+    }
+
+    addRun(run){
+        this.runs += run;
+        this.currentOverRuns += run;
+    }
+
+    addWicket(){
+        this.wickets += 1;
+    }
+
+    addBall(){
+        this.balls++;
+    }
+
+    addOver(){
+        this.overs++;
+        if (this.currentOverRuns === 0) {
+            this.maidens++;
+        }
+        this.currentOverRuns = 0;
+    }
+}
+
+
+
+class Team {
+    constructor(name, batters, bowlers, balls, runs, wickets, batting, played) {
+        this.name = name;
+        this.batters = batters;
+        this.bowlers = bowlers;
+        this.balls = balls;
+        this.runs = runs;
+        this.wickets = wickets;
+        this.batting = batting;
+        this.played = played;
+    }
+    addBatter(batter) {
+        this.batters.push(batter);
+        console.log(batter);
+    }
+    addBowler(bowler) {
+        this.bowlers.push(bowler);
+        console.log(bowler);
+    }
+    addBall() {
+        this.balls++;
+    }
+    addRun(run) {
+        this.runs += run;
+    }
+    addWicket() {
+        this.wickets++;
+    }
+    getScore() {
+        return `${this.runs}/${this.wickets} in ${Math.floor(this.balls / 6)}.${this.balls % 6} overs`;
+    }
+    crr(){
+        return (this.runs/this.balls)*6;
+    }
+    rrr(run){
+        let ans = (run-this.runs)/(overs-(this.balls/6));
+        if (ans > 0) return ans;
+        else return 0;
+    }
+}
 let team1, team2;
 let sBatter = 0, nBatter = 1, cBowler = 0;
 let active, inactive;
@@ -68,7 +165,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const liveBtn = document.getElementById("navigateLive");
     const savedState = localStorage.getItem("matchState");
     const currentInfo = document.getElementById("currentInfo");
-    const reseMatch = document.getElementById("resetMatch");
 
     if(storeRun) {
         storeRun.addEventListener('click', (event) => {
@@ -86,9 +182,9 @@ document.addEventListener('DOMContentLoaded', () => {
             const run = parseInt(selectedRun.value)
             console.log(`Ball ${active.balls + 1}: ${selectedRun.value} run(s) | Total: ${active.runs} | Bowler: ${inactive.bowlers[cBowler].name} | Current run rate: ${active.crr()}`);
             active.addBall();
-            var isNoBall = document.getElementById("noBall").isConnected(":checked");
-            var isBye = document.getElementById("bye").isConnected(":checked"); 
-            var isLegBye = document.getElementById("legBye").isConnected(":checked");  
+            var isNoBall = document.getElementById("noBall").checked;
+            var isBye = document.getElementById("bye").checked; 
+            var isLegBye = document.getElementById("legBye").checked;  
             if(isNoBall) {
                 active.balls--;
                 active.batters[sBatter].balls--;
@@ -136,6 +232,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             else if(run === 7){
                 active.runs++;
+                active.balls--;
                 active.batters[sBatter].addRun(1);
                 inactive.bowlers[cBowler].addRun(1);
             }
@@ -431,43 +528,7 @@ document.addEventListener('DOMContentLoaded', () => {
             `;
         });
     }
-    if(document.getElementById("scoreboardBatsman")) {
-        const BtBody = document.getElementById("batsmanBody");
-        const BwBody = document.getElementById("bowlerBody");
-        const allBatters = active.batters.concat(inactive.batters);
-        const allBowlers = active.bowlers.concat(inactive.bowlers);
-        console.log(allBatters);
-        let i = 1;
-        allBatters.forEach(batter => {
-            BtBody.innerHTML += `
-                <tr>
-                    <td>${i++}</td>
-                    <td>${batter.name}</td>
-                    <td>${batter.team}</td>
-                    <td>${batter.runs}</td>
-                    <td>${batter.balls}</td>
-                    <td>${batter.fours}</td>
-                    <td>${batter.sixes}</td>
-                    <td>${(batter.crr()).toFixed(2)}</td>
-                </tr>
-            `;
-        });
-        i = 1;
-        allBowlers.forEach(bowler => {
-            BwBody.innerHTML += `
-                <tr>
-                    <td>${i++}</td>
-                    <td>${bowler.name}</td>
-                    <td>${bowler.team}</td>
-                    <td>${bowler.overs}</td>
-                    <td>${bowler.maidens}</td>
-                    <td>${bowler.runs}</td>
-                    <td>${bowler.wickets}</td>
-                    <td>${!bowler.runs/bowler.overs ? 0 :  (bowler.runs/bowler.overs*6).toFixed(2)}</td>
-                </tr>
-            `;
-        });
-    }
+
     function saveState() {
         const state = {
             active,
