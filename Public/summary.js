@@ -1,4 +1,4 @@
-import { Match } from './match.js';
+import { Match } from 'match.js';
 console.log("teri maa ka bhosdaa");
 document.addEventListener('DOMContentLoaded', async () => {
     const team1 = JSON.parse(localStorage.getItem("team1"));
