@@ -135,7 +135,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         console.log(`Match started: ${team1.name} vs ${team2.name}`);
         console.log(`Toss won by: ${toss} and chose to ${tossResult}`);
-
+        const firstBatter = team1.batting ? team1.name : team2.name;
+        localStorage.setItem("firstBatter", firstBatter);
         localStorage.setItem("team1", JSON.stringify(team1));
         localStorage.setItem("team2", JSON.stringify(team2));
         localStorage.setItem("toss", toss);
@@ -144,13 +145,11 @@ document.addEventListener('DOMContentLoaded', () => {
     });}
     team1 = reviveTeam(JSON.parse(localStorage.getItem("team1")));
     team2 = reviveTeam(JSON.parse(localStorage.getItem("team2")));
-    
     active = team1.batting === 1 ? team1 : team2;
     inactive = team1.batting === 1 ? team2 : team1;
     console.log("Loaded team1:", team1);
     console.log("Loaded team2:", team2);
     
-
 
     const storeRun = document.getElementById("playBall");
     const batsman1 = document.getElementById("batsman1");
@@ -165,7 +164,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const scoreboardBtn = document.getElementById("navigateScoreboard");
     const liveBtn = document.getElementById("navigateLive");
     const savedState = localStorage.getItem("matchState");
-
+    const currentInfo = document.getElementById("currentInfo");
 
 
     if(storeRun) {
@@ -273,10 +272,13 @@ document.addEventListener('DOMContentLoaded', () => {
         sBatter = savedSBatter;
         nBatter = savedNBatter;
         cBowler = savedCBowler;
-        if(liveBtn) updateScoreboard();
-        if(scoreboardBtn) updateLive();
         if(currentInfo && currentInfoHTML){
             currentInfo.innerHTML = currentInfoHTML;
+        }
+        if(batsman1){
+            batsman1.style.display="none";
+            batsman2.style.display="none";
+            bowlerDiv.style.display="none";
         }
     }
 
@@ -299,7 +301,6 @@ document.addEventListener('DOMContentLoaded', () => {
             } else {
                 console.log("No name entered for striker.");
             }
-            updateLive();
         });
     }
 
@@ -320,7 +321,7 @@ document.addEventListener('DOMContentLoaded', () => {
             } else {
                 console.log("No name entered for non-striker.");
             }
-            updateLive();
+
         });
     }
     
@@ -341,7 +342,6 @@ document.addEventListener('DOMContentLoaded', () => {
             } else {
                 console.log("No name entered for bowler.");
             }
-            updateLive();
         });
     }
     
@@ -350,12 +350,14 @@ document.addEventListener('DOMContentLoaded', () => {
             event.preventDefault();
             saveState();
             window.location.href = "scoreboard.html";
+            console.log("Iss webpage ki maaa ka bhosdaa");
         });
     }
-    
-    if(liveBtn){
-        liveBtn.addEventListener('click', (event) => {
+    console.log("Iss webpage ki maaa ka bhosdaa");
+    if(document.getElementById("navigateLive")){
+        document.getElementById("navigateLive").addEventListener('click', (event) => {
             event.preventDefault();
+            console.log("wtf wont it goooooooo!!!!!!!")
             window.location.href = "live.html";
         });
     }
@@ -389,7 +391,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     <td>${active.batters[sBatter].fours}</td>
                     <td>${active.batters[sBatter].sixes}</td>
                     <td>${active.batters[sBatter].balls}</td>
-                    <td>${active.batters[sBatter].crr()}</td>
+                    <td>${(active.batters[sBatter].crr()).toFixed(2)}</td>
                 </tr>
                 <tr>
                     <td>Non-Striker Batsman</td>
@@ -398,7 +400,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     <td>${active.batters[nBatter].fours}</td>
                     <td>${active.batters[nBatter].sixes}</td>
                     <td>${active.batters[nBatter].balls}</td>
-                    <td>${active.batters[nBatter].crr()}</td>
+                    <td>${(active.batters[nBatter].crr()).toFixed(2)}</td>
                 </tr>
             </table>
             <table id="currentBowler">
@@ -420,20 +422,34 @@ document.addEventListener('DOMContentLoaded', () => {
                     <td>${inactive.bowlers[cBowler].maidens}</td>
                     <td>${inactive.bowlers[cBowler].runs}</td>
                     <td>${inactive.bowlers[cBowler].wickets}</td>
-                    <td>${!inactive.bowlers[cBowler].runs/inactive.bowlers[cBowler].overs ? 0 :  inactive.bowlers[cBowler].runs/inactive.bowlers[cBowler].balls*6}</td>
+                    <td>${!inactive.bowlers[cBowler].runs/inactive.bowlers[cBowler].overs ? 0 :  (inactive.bowlers[cBowler].runs/inactive.bowlers[cBowler].balls*6).toFixed(2)}</td>
                 </tr>
             </table>
             `
         }
     }
-    if(document.getElementById("batsmanBody")) {
+    if (document.getElementById("whoWon")) {
+        const whoWon = document.getElementById("whoWon");
+        const winningTeam = won(team1, team2);
+        const firstBatter = localStorage.getItem("firstBatter");
+        console.log(winningTeam.name);
+        console.log(firstBatter);
+        if (winningTeam === 0) {
+            whoWon.textContent = `Draw — both teams at ${team1.runs} Runs in 2 overs`;
+        } else if (winningTeam.name === firstBatter) {
+            whoWon.textContent = `${firstBatter} won by ${Math.abs(team1.runs - team2.runs)} runs`;
+            console.log(winningTeam.name);
+        } else if(winningTeam.name !== firstBatter){
+            whoWon.textContent = `${winningTeam.name} won by ${10 - winningTeam.wickets} Wickets (${12 - winningTeam.balls} balls left)`;
+        }
+    }
+    
+    if(document.getElementById("scoreboardBatsman")) {
         const BtBody = document.getElementById("batsmanBody");
-        BtBody.innerHTML = ""; 
         const BwBody = document.getElementById("bowlerBody");
-        BwBody.innerHTML = "";
         const allBatters = active.batters.concat(inactive.batters);
         const allBowlers = active.bowlers.concat(inactive.bowlers);
-
+        console.log(allBatters);
         let i = 1;
         allBatters.forEach(batter => {
             BtBody.innerHTML += `
@@ -487,5 +503,11 @@ document.addEventListener('DOMContentLoaded', () => {
             team.bowlers.push(Object.assign(new Bowler(), bw));
         });
         return team;
+    }
+
+    function won(team1,team2) {
+        if(team1.runs > team2.runs) return team1;
+        else if(team2.runs > team1.runs) return team2;
+        else return 0;
     }
 });
