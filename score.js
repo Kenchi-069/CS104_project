@@ -103,10 +103,10 @@ let overs = 2;
 
 
 document.addEventListener('DOMContentLoaded', () => {
-    
     const startMatch = document.getElementById("startMatch");
 
-    if(startMatch) {startMatch.addEventListener('click', (event) => {
+    if(startMatch) {
+        startMatch.addEventListener('click', (event) => {
         event.preventDefault(); 
         const toss = document.getElementById("toss").value;
         const tossResult = document.getElementById("tossResult").value
@@ -142,18 +142,14 @@ document.addEventListener('DOMContentLoaded', () => {
         localStorage.setItem("tossResult", tossResult);
         window.location.href = "live.html";
     });}
-    team1 = JSON.parse(localStorage.getItem("team1"));
-    team2 = JSON.parse(localStorage.getItem("team2"));
-    active = team1.batting === 1 ? new Team(
-        team1.name, team1.batters, team1.bowlers, team1.balls, team1.runs, team1.wickets, team1.batting, team1.played) : new Team(
-        team2.name, team2.batters, team2.bowlers, team2.balls, team2.runs, team2.wickets, team2.batting, team2.played
-    );
-    inactive = team1.batting === 1 ? new Team(
-        team2.name, team2.batters, team2.bowlers, team2.balls, team2.runs, team2.wickets, team2.batting, team2.played) : new Team(
-        team1.name, team1.batters, team1.bowlers, team1.balls, team1.runs, team1.wickets, team1.batting, team1.played
-    );
+    team1 = reviveTeam(JSON.parse(localStorage.getItem("team1")));
+    team2 = reviveTeam(JSON.parse(localStorage.getItem("team2")));
+    
+    active = team1.batting === 1 ? team1 : team2;
+    inactive = team1.batting === 1 ? team2 : team1;
     console.log("Loaded team1:", team1);
     console.log("Loaded team2:", team2);
+    
 
 
     const storeRun = document.getElementById("playBall");
@@ -166,8 +162,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const nonStrikerInput = document.getElementById("nstriker");
     const bowlerBtn = document.getElementById("setBowler");
     const bowlerInput = document.getElementById("bowlerName");
-    const scoreboardBtn = document.getElementById("navigateScoreboard")
-    const liveBtn = document.getElementById("navigateLive")
+    const scoreboardBtn = document.getElementById("navigateScoreboard");
+    const liveBtn = document.getElementById("navigateLive");
+    const savedState = localStorage.getItem("matchState");
+
+
 
     if(storeRun) {
         storeRun.addEventListener('click', (event) => {
@@ -206,7 +205,20 @@ document.addEventListener('DOMContentLoaded', () => {
                     nBatter = temp;
                 }
             }
-            if(inactive.played) console.log(`Required run rate: ${active.rrr(inactive.runs)}`);
+            if(inactive.played) {
+                console.log(`Required run rate: ${active.rrr(inactive.runs)}`);
+                if(active.runs > inactive.runs){
+                    active.played = 1;
+                    team1 = team1.batting ? active : inactive;
+                    team2 = team2.batting ? active : inactive;
+                    team1.batting = 0;
+                    team2.batting = 0;
+                    localStorage.setItem("team1",JSON.stringify(team1));
+                    localStorage.setItem("team2",JSON.stringify(team2));
+                    console.log("Match is finished. Redirecting.....");
+                    window.location.href = "summary.html";
+                }
+            }
             if(!active.played && (active.balls === overs*6 || active.wickets === 10)) {
                 console.log("I am inside of changing the batting and bowling")
                 if(!inactive.played){
@@ -253,68 +265,101 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     }
 
-    strikerBtn.addEventListener('click', (event) => {
-        event.preventDefault(); 
 
-    
-        const name = strikerInput.value.trim(); 
-        if (name !== "") {
-            const striker = new Batter(name, 0, 0, 0, 0, active.name);
-            console.log("Striker batter set to: " + name);
-            active.addBatter(striker);
-            batsman1.style.display = "none";
-            console.log(active.batters);
-        } else {
-            console.log("No name entered for striker.");
+    if(savedState){
+        const { active : savedActive, inactive : savedInactive, sBatter : savedSBatter, nBatter : savedNBatter, cBowler : savedCBowler, currentInfoHTML} = JSON.parse(savedState);
+        active = reviveTeam(savedActive);
+        inactive = reviveTeam(savedInactive);
+        sBatter = savedSBatter;
+        nBatter = savedNBatter;
+        cBowler = savedCBowler;
+        if(liveBtn) updateScoreboard();
+        if(scoreboardBtn) updateLive();
+        if(currentInfo && currentInfoHTML){
+            currentInfo.innerHTML = currentInfoHTML;
         }
-        updateLive();
-    });
+    }
 
-    nStrikerBtn.addEventListener('click', (event) => {
-        event.preventDefault();
 
-        const name = nonStrikerInput.value.trim();
-        if (name !== "") {
-            const nStriker = new Batter(name, 0, 0, 0, 0, active.name);
-            console.log("Non-striker batter set to: " + name);
-            active.addBatter(nStriker);
-            batsman2.style.display = "none";
-            console.log(active.batters);
-        } else {
-            console.log("No name entered for non-striker.");
-        }
-        updateLive();
-    });
+    if(strikerBtn) {
+        strikerBtn.addEventListener('click', (event) => {
+            event.preventDefault(); 
 
-    bowlerBtn.addEventListener('click', (event) => {
-        event.preventDefault(); 
-    
-        const name = bowlerInput.value.trim();
-        if (name !== "") {
-            if (!inactive.bowlers.some(b => b.name === name)) {
-                const bowler = new Bowler(name, 0, 0, 0, 0, inactive.name);
-                inactive.addBowler(bowler);
-                console.log("New bowler added:", name);
-                bowlerDiv.style.display = "none";
+        
+            const name = strikerInput.value.trim(); 
+            if (name !== "") {
+                if (!active.batters.some(b => b.name === name)) {
+                    const striker = new Batter(name, 0, 0, 0, 0, active.name);
+                    active.addBatter(striker);
+                    console.log("New batter added:", name);
+                    batsman1.style.display = "none";
+                } else {
+                    console.log("Batter already exists:", name);
+                }
             } else {
-                console.log("Bowler already exists:", name);
+                console.log("No name entered for striker.");
             }
-        } else {
-            console.log("No name entered for bowler.");
-        }
-        updateLive();
-    });
+            updateLive();
+        });
+    }
 
-    scoreboardBtn.addEventListener('click', (event) => {
-        event.preventDefault();
-        window.location.href = "scoreboard.html";
-        updateScoreboard();
-    });
-
-    liveBtn.addEventListener('click', (event) =>{
-        event.preventDefault();
-        window.location.href = "live.html";
-    });
+    if(nStrikerBtn){
+        nStrikerBtn.addEventListener('click', (event) => {
+            event.preventDefault();
+    
+            const name = nonStrikerInput.value.trim();
+            if (name !== "") {
+                if (!active.batters.some(b => b.name === name)) {
+                    const nStriker = new Batter(name, 0, 0, 0, 0, active.name);
+                    active.addBatter(nStriker);
+                    console.log("New batter added:", name);
+                    batsman2.style.display = "none";
+                } else {
+                    console.log("Batter already exists:", name);
+                }
+            } else {
+                console.log("No name entered for non-striker.");
+            }
+            updateLive();
+        });
+    }
+    
+    if(bowlerBtn){
+        bowlerBtn.addEventListener('click', (event) => {
+            event.preventDefault(); 
+        
+            const name = bowlerInput.value.trim();
+            if (name !== "") {
+                if (!inactive.bowlers.some(b => b.name === name)) {
+                    const bowler = new Bowler(name, 0, 0, 0, 0, inactive.name);
+                    inactive.addBowler(bowler);
+                    console.log("New bowler added:", name);
+                    bowlerDiv.style.display = "none";
+                } else {
+                    console.log("Bowler already exists:", name);
+                }
+            } else {
+                console.log("No name entered for bowler.");
+            }
+            updateLive();
+        });
+    }
+    
+    if(scoreboardBtn){
+        scoreboardBtn.addEventListener('click', (event) => {
+            event.preventDefault();
+            saveState();
+            window.location.href = "scoreboard.html";
+        });
+    }
+    
+    if(liveBtn){
+        liveBtn.addEventListener('click', (event) => {
+            event.preventDefault();
+            window.location.href = "live.html";
+        });
+    }
+    
 
     function updateLive(){
         const matchInfo = document.getElementById("matchInfo");
@@ -381,13 +426,13 @@ document.addEventListener('DOMContentLoaded', () => {
             `
         }
     }
-    function updateScoreboard() {
+    if(document.getElementById("batsmanBody")) {
         const BtBody = document.getElementById("batsmanBody");
         BtBody.innerHTML = ""; 
         const BwBody = document.getElementById("bowlerBody");
         BwBody.innerHTML = "";
-        const allBatters = [...active.batters, ...inactive.batters];
-        const allBowlers = [...inactive.bowlers, ...active.bowlers];
+        const allBatters = active.batters.concat(inactive.batters);
+        const allBowlers = active.bowlers.concat(inactive.bowlers);
 
         let i = 1;
         allBatters.forEach(batter => {
@@ -420,5 +465,27 @@ document.addEventListener('DOMContentLoaded', () => {
             `;
         });
     }
+    function saveState() {
+        const state = {
+            active,
+            inactive,    
+            sBatter,     
+            nBatter,     
+            cBowler,
+            currentInfoHTML: currentInfo ? currentInfo.innerHTML : ""     
+        };
+
+        localStorage.setItem("matchState", JSON.stringify(state));
+    }
     
+    function reviveTeam(raw) {
+        const team = new Team(raw.name, [], [], raw.balls, raw.runs, raw.wickets, raw.batting, raw.played);
+        raw.batters.forEach(b => {
+            team.batters.push(Object.assign(new Batter(), b));
+        });
+        raw.bowlers.forEach(bw => {
+            team.bowlers.push(Object.assign(new Bowler(), bw));
+        });
+        return team;
+    }
 });
