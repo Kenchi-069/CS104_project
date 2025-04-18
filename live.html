@@ -3,52 +3,97 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Cricket Score Tracker</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;600&family=Roboto:wght@300;400&display=swap">
+    <link rel="stylesheet" href="live.css">
 </head>
 <body>
-    <div id="matchInfo"></div>
-    <div id="tossInfo"></div>
-    <div id="batsman1">
-        <form>
-            <label>Striker Batter name:</label><br>
-            <input type="text" id="striker" name="striker"><br>
-            <button id="setcBatter" type="button">Set Striker</button>
-        </form>
-    </div>
-    <div id="batsman2">
-        <form>
-            <label>Non-Striker Batter name:</label><br>
-            <input type="text" id="nstriker" name="nstriker"><br>
-            <button id="setnBatter" type="button">Set Non-Striker</button>
-        </form>
-    </div>
-    <div id="bowler">
-        <form>
-            <label>Bowler name:</label><br>
-            <input type="text" id="bowlerName" name="bowlerName"><br>
-            <button id="setBowler" type="button">Set bowler</button>
-        </form>
-    </div><br><br>
-    <div id="runs">
-        <form id="runsForm">
-            <label for="runs">Runs:</label><br>
-            <input type="radio" class="runs" name="runs" value="0">0<br>
-            <input type="radio" class="runs" name="runs" value="1">1<br>
-            <input type="radio" class="runs" name="runs" value="2">2<br>
-            <input type="radio" class="runs" name="runs" value="3">3<br>
-            <input type="radio" class="runs" name="runs" value="4">4<br>
-            <input type="radio" class="runs" name="runs" value="6">6<br>
-            <input type="radio" class="runs" name="runs" value="-1" id="wicket">Wicket<br>
-            <input type="radio" class="runs" name="runs" value="7">Wide<br>
-            <input type="checkbox" class="add" name="noBall" value="8" id="noBall">No Ball<br>
-            <input type="checkbox" class="add" name="bye" value="9" id="bye">Bye<br>
-            <input type="checkbox" class="add" name="legBye" value="10" id="legBye">Leg-Bye<br>
+    <div id="container">
+        <div id="header">
+            <h1>Live Match</h1>
+            <div style="overflow: hidden;">
+                <div id="matchInfo" style="float: left; width: 49%; margin-right: 1%;">Add a batsman so that match starts</div>
+                <div id="tossInfo" style="float: right; width: 49%; margin-left: 1%;">
+                </div>
+            </div>
+        </div>
+        <div class="playersForm">
+            <div id="batsman1" class="players">
+                <h3>Striker Batsman</h3>
+                <label for="striker">Batter name:</label>
+                <input type="text" id="striker" name="striker" placeholder="Enter striker's name">
+                <button id="setcBatter" type="button">Set Striker</button>
+            </div>
+            <div id="batsman2" class="players">
+                <h3>Non-Striker Batter</h3>
+                <label for="nstriker">Batter name:</label>
+                <input type="text" id="nstriker" name="nstriker" placeholder="Enter non-striker's name">
+                <button id="setnBatter" type="button">Set Non-Striker</button>
+            </div>
+            <div id="bowler" class="players">
+                <h3>Bowler</h3>
+                <label for="bowlerName">Bowler name:</label>
+                <input type="text" id="bowlerName" name="bowlerName" placeholder="Enter bowler's name">
+                <button id="setBowler" type="button">Set Bowler</button>
+            </div>
+        </div>
+
+        
+        <div id="runs">
+            <h2>Record Ball</h2>
+            <form id="runsForm">
+                <div class="run-option">
+                    <input type="radio" id="run0" class="runs" name="runs" value="0">
+                    <label for="run0">0</label>
+                </div>
+                <div class="run-option">
+                    <input type="radio" id="run1" class="runs" name="runs" value="1">
+                    <label for="run1">1</label>
+                </div>
+                <div class="run-option">
+                    <input type="radio" id="run2" class="runs" name="runs" value="2">
+                    <label for="run2">2</label>
+                </div>
+                <div class="run-option">
+                    <input type="radio" id="run3" class="runs" name="runs" value="3">
+                    <label for="run3">3</label>
+                </div>
+                <div class="run-option">
+                    <input type="radio" id="run4" class="runs" name="runs" value="4">
+                    <label for="run4">4</label>
+                </div>
+                <div class="run-option">
+                    <input type="radio" id="run6" class="runs" name="runs" value="6">
+                    <label for="run6">6</label>
+                </div>
+                <div class="run-option">
+                    <input type="radio" id="wicket" class="runs" name="runs" value="-1">
+                    <label for="wicket">Wicket</label>
+                </div>
+                <div class="run-option">
+                    <input type="radio" id="wide" class="runs" name="runs" value="7">
+                    <label for="wide">Wide</label>
+                </div>
+                <div class="run-option">
+                    <input type="checkbox" id="noBall" class="add" name="noBall" value="8">
+                    <label for="noBall">No Ball</label>
+                </div>
+                <div class="run-option">
+                    <input type="checkbox" id="bye" class="add" name="bye" value="9">
+                    <label for="bye">Bye</label>
+                </div>
+                <div class="run-option">
+                    <input type="checkbox" id="legBye" class="add" name="legBye" value="10">
+                    <label for="legBye">Leg Bye</label>
+                </div>
+            </form>
             <button id="playBall" type="button">Ball</button>
-        </form>
-    </div><br><br>
-    <div id="currentInfo">
+        </div>
+        <div id="scoreboard" style="grid-column: 1 / -1">
+            <h2>Current Match Status</h2>
+        </div>
+        <button type="button" id="navigateScoreboard">Go to Scoreboard</button>
     </div>
-    <button type="button" id="navigateScoreboard">Go to Scoreboard</button>
+    <script src="score.js"></script>
 </body>
-<script src="score.js"></script>
 </html>

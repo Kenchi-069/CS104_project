@@ -101,12 +101,9 @@ let sBatter = 0, nBatter = 1, cBowler = 0;
 let active, inactive;
 let overs = 2;
 let wasNoBall = false;
-if(document.getElementById("tossButton")) {
-    
-}
+
 document.addEventListener('DOMContentLoaded', () => {
     const startMatch = document.getElementById("startMatch");
-
     if(startMatch) {
         startMatch.addEventListener('click', (event) => {
         event.preventDefault(); 
@@ -136,7 +133,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
         console.log(`Match started: ${team1.name} vs ${team2.name}`);
-        console.log(`Toss won by: ${toss} and chose to ${tossResult}`);
+        
         const firstBatter = team1.batting ? team1.name : team2.name;
         localStorage.setItem("firstBatter", firstBatter);
         localStorage.setItem("team1", JSON.stringify(team1));
@@ -147,6 +144,8 @@ document.addEventListener('DOMContentLoaded', () => {
     });}
     team1 = reviveTeam(JSON.parse(localStorage.getItem("team1")));
     team2 = reviveTeam(JSON.parse(localStorage.getItem("team2")));
+    const toss = localStorage.getItem("toss");
+    const tossResult = localStorage.getItem("tossResult");
     active = team1.batting === 1 ? team1 : team2;
     inactive = team1.batting === 1 ? team2 : team1;
     console.log("Loaded team1:", team1);
@@ -167,7 +166,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const liveBtn = document.getElementById("navigateLive");
     const savedState = localStorage.getItem("matchState");
     const currentInfo = document.getElementById("currentInfo");
-
+    if(document.getElementById("tossInfo")){
+        document.getElementById("tossInfo").innerText =  `Toss won by: ${toss} and chose to ${tossResult}`;
+    }
+    
     if(storeRun) {
         storeRun.addEventListener('click', (event) => {
         event.preventDefault();
@@ -414,7 +416,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function updateLive(){
         const matchInfo = document.getElementById("matchInfo");
-        const currentInfo = document.getElementById("currentInfo");
+        const currentInfo = document.getElementById("scoreboard");
         if(!inactive.played){
             matchInfo.textContent = `${active.name} ${active.runs}/${active.wickets} (${Math.floor(active.balls/6)}.${active.balls%6}) vs. ${inactive.name}`;
         }
@@ -423,57 +425,70 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         if(active.batters[0] && active.batters[1] && inactive.bowlers[0]){
             currentInfo.innerHTML = `
-            <table id="currentBatters">
-                <tr>
-                    <th>Position</th>
-                    <th>Name</th>
-                    <th>Runs scored</th>
-                    <th>Fours</th>
-                    <th>Sixes</th>
-                    <th>Balls played</th>
-                    <th>Current Run Rate</th>
-                </tr>
-                <tr>
-                    <td>Striker Batsman</td>
-                    <td>${active.batters[sBatter].name}</td>
-                    <td>${active.batters[sBatter].runs}</td>
-                    <td>${active.batters[sBatter].fours}</td>
-                    <td>${active.batters[sBatter].sixes}</td>
-                    <td>${active.batters[sBatter].balls}</td>
-                    <td>${(active.batters[sBatter].crr()).toFixed(2)}</td>
-                </tr>
-                <tr>
-                    <td>Non-Striker Batsman</td>
-                    <td>${active.batters[nBatter].name}</td>
-                    <td>${active.batters[nBatter].runs}</td>
-                    <td>${active.batters[nBatter].fours}</td>
-                    <td>${active.batters[nBatter].sixes}</td>
-                    <td>${active.batters[nBatter].balls}</td>
-                    <td>${(active.batters[nBatter].crr()).toFixed(2)}</td>
-                </tr>
-            </table>
-            <table id="currentBowler">
-                <tr>
-                    <th>Bowler no.</th>
-                    <th>Name</th>
-                    <th>Balls</th>
-                    <th>Overs</th>
-                    <th>Maidens</th>
-                    <th>Runs conceded</th>
-                    <th>Wickets Taken</th>
-                    <th>Economy Rate</th>
-                </tr>
-                <tr>
-                    <td>${cBowler+1}</td>
-                    <td>${inactive.bowlers[cBowler].name}</td>
-                    <td>${inactive.bowlers[cBowler].balls}</td>
-                    <td>${inactive.bowlers[cBowler].overs}</td>
-                    <td>${inactive.bowlers[cBowler].maidens}</td>
-                    <td>${inactive.bowlers[cBowler].runs}</td>
-                    <td>${inactive.bowlers[cBowler].wickets}</td>
-                    <td>${!inactive.bowlers[cBowler].runs/inactive.bowlers[cBowler].overs ? 0 :  (inactive.bowlers[cBowler].runs/inactive.bowlers[cBowler].balls*6).toFixed(2)}</td>
-                </tr>
-            </table>
+                <h2>Current score</h2>
+                <div class="tables-container">
+                    <!-- Current Batters Table -->
+                    <table id="currentBatters" class="scoretable">
+                        <thead>
+                            <tr>
+                                <th>Position</th>
+                                <th>Name</th>
+                                <th>Runs</th>
+                                <th>4s</th>
+                                <th>6s</th>
+                                <th>Balls</th>
+                                <th>Run Rate</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Striker</td>
+                                <td>${active.batters[sBatter].name}</td>
+                                <td>${active.batters[sBatter].runs}</td>
+                                <td>${active.batters[sBatter].fours}</td>
+                                <td>${active.batters[sBatter].sixes}</td>
+                                <td>${active.batters[sBatter].balls}</td>
+                                <td>${(active.batters[sBatter].crr()).toFixed(2)}</td>
+                            </tr>
+                            <tr>
+                                <td>Non-Striker</td>
+                                <td>${active.batters[nBatter].name}</td>
+                                <td>${active.batters[nBatter].runs}</td>
+                                <td>${active.batters[nBatter].fours}</td>
+                                <td>${active.batters[nBatter].sixes}</td>
+                                <td>${active.batters[nBatter].balls}</td>
+                                <td>${(active.batters[nBatter].crr()).toFixed(2)}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <table id="currentBowler" class="scoretable">
+                        <thead>
+                            <tr>
+                                <th>Bowler</th>
+                                <th>Name</th>
+                                <th>Balls</th>
+                                <th>Overs</th>
+                                <th>Maidens</th>
+                                <th>Runs</th>
+                                <th>Wickets</th>
+                                <th>Economy</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>${cBowler+1}</td>
+                                <td>${inactive.bowlers[cBowler].name}</td>
+                                <td>${inactive.bowlers[cBowler].balls}</td>
+                                <td>${inactive.bowlers[cBowler].overs}</td>
+                                <td>${inactive.bowlers[cBowler].maidens}</td>
+                                <td>${inactive.bowlers[cBowler].runs}</td>
+                                <td>${inactive.bowlers[cBowler].wickets}</td>
+                                <td>${!inactive.bowlers[cBowler].runs/inactive.bowlers[cBowler].overs ? 0 :  (inactive.bowlers[cBowler].runs/inactive.bowlers[cBowler].balls*6).toFixed(2)}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             `
         }
     }

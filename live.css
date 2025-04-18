@@ -1,0 +1,271 @@
+/* live.css - Pixel-style Cricket Score Tracker */
+
+/* Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: linear-gradient(-45deg, #121212, #1e1e1e, #151515, #222);
+    background-size: 400% 400%;
+    animation: backgroundShift 15s ease infinite;
+    color: white;
+    padding: 20px;
+    min-height: 100vh;
+    font-family: 'Roboto', sans-serif;
+}
+
+@keyframes backgroundShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* Header Styles */
+#header h1 {
+    font-family: 'Pixelify Sans', sans-serif;
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+    text-align: center;
+    color: #29a329;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    animation: live 2s infinite;
+}
+@keyframes live {
+    0%, 100% {opacity: 100%}
+    50% {opacity: 50%}
+}
+#matchInfo, #tossInfo {
+    background-color: rgba(44, 44, 44, 0.8);
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    font-size: 1.1rem;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+/* Player Forms */
+.playersForm {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.players {
+    background-color: rgba(44, 44, 44, 0.8);
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(5px);
+}
+
+.players h3 {
+    font-family: 'Pixelify Sans', sans-serif;
+    color: #d4af37;
+    margin-bottom: 15px;
+    font-size: 1.5rem;
+}
+
+.players label {
+    display: block;
+    margin-bottom: 8px;
+    color: #ccc;
+    font-size: 1rem;
+}
+
+.players input[type="text"] {
+    width: 100%;
+    height: 40px;
+    border-radius: 8px;
+    padding: 10px;
+    margin-bottom: 15px;
+    background-color: #333;
+    border: 1px solid #444;
+    color: white;
+    font-size: 1rem;
+    transition: border 0.3s ease;
+}
+
+.players input[type="text"]:focus {
+    outline: none;
+    border-color: #29a329;
+}
+
+.players button {
+    width: 100%;
+    padding: 12px;
+    border-radius: 8px;
+    border: none;
+    background-color: #29a329;
+    color: white;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.players button:hover {
+    background-color: #1f7a1f;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Runs Form */
+#runs {
+    background-color: rgba(44, 44, 44, 0.8);
+    padding: 20px;
+    border-radius: 15px;
+    margin-bottom: 30px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(5px);
+}
+
+#runs h2 {
+    font-family: 'Pixelify Sans', sans-serif;
+    color: #fea88b;
+    margin-bottom: 20px;
+    font-size: 1.8rem;
+}
+
+#runsForm {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.run-option {
+    display: flex;
+    align-items: center;
+    background-color: #333;
+    padding: 10px 15px;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+}
+
+.run-option:hover {
+    background-color: #3a3a3a;
+    transform: translateY(-2px);
+}
+
+.run-option input[type="radio"],
+.run-option input[type="checkbox"] {
+    margin-right: 10px;
+    accent-color: #29a329;
+}
+
+.run-option label {
+    color: white;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+#wicket {
+    accent-color: #e74c3c;
+}
+
+#noBall, #bye, #legBye {
+    accent-color: #3498db;
+}
+
+#playBall {
+    width: 100%;
+    padding: 15px;
+    border-radius: 8px;
+    border: none;
+    background-color: #ac0000;
+    color: white;
+    font-size: 1.2rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+#playBall:hover {
+    background-color: #8a0000;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Scoreboard Section */
+#scoreboard {
+    background-color: rgba(44, 44, 44, 0.8);
+    padding: 20px;
+    border-radius: 15px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(5px);
+}
+
+#scoreboard h2 {
+    font-family: 'Pixelify Sans', sans-serif;
+    color: #058bce;
+    margin-bottom: 15px;
+    font-size: 1.8rem;
+    text-align: center;
+    background-color: #ccc;
+    margin-top: 10px;
+    margin-left: 20%;
+    margin-right: 20%;
+    border-radius: 10px;
+}
+
+/* Navigation Button */
+#navigateScoreboard {
+    width: 25%;
+    padding: 15px;
+    border-radius: 200px;
+    border: none;
+    background-color: #0047ab;
+    color: white;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+#navigateScoreboard:hover {
+    background-color: #003380;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+.tables-container {
+    display: grid;
+    grid-template-rows: auto auto;
+    text-align: center;
+    font-family: 'Pixelify Sans', sans-serif;
+    color: rgba(44, 44, 44, 0.8);
+}
+.scoretable th {
+    background-color: #121212;
+    color: #f0f0f0;
+    border-radius: 10px;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+    #runsForm {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .playersForm {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+    #runsForm {
+        grid-template-columns: 1fr;
+    }
+    
+    #header h1 {
+        font-size: 2rem;
+    }
+    
+    .players h3, #runs h2, #scoreboard h2 {
+        font-size: 1.5rem;
+    }
+}
