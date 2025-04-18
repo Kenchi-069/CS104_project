@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div id="matchInfo"></div>
+    <div id="tossInfo"></div>
+    <div id="batsman1">
+        <form>
+            <label>Striker Batter name:</label><br>
+            <input type="text" id="striker" name="striker"><br>
+            <button id="setcBatter" type="button">Set Striker</button>
+        </form>
+    </div>
+    <div id="batsman2">
+        <form>
+            <label>Non-Striker Batter name:</label><br>
+            <input type="text" id="nstriker" name="nstriker"><br>
+            <button id="setnBatter" type="button">Set Non-Striker</button>
+        </form>
+    </div>
+    <div id="bowler">
+        <form>
+            <label>Bowler name:</label><br>
+            <input type="text" id="bowlerName" name="bowlerName"><br>
+            <button id="setBowler" type="button">Set bowler</button>
+        </form>
+    </div><br><br>
+    <div id="runs">
+        <form id="runsForm">
+            <label for="runs">Runs:</label><br>
+            <input type="radio" class="runs" name="runs" value="0">0<br>
+            <input type="radio" class="runs" name="runs" value="1">1<br>
+            <input type="radio" class="runs" name="runs" value="2">2<br>
+            <input type="radio" class="runs" name="runs" value="3">3<br>
+            <input type="radio" class="runs" name="runs" value="4">4<br>
+            <input type="radio" class="runs" name="runs" value="6">6<br>
+            <input type="radio" class="runs" name="runs" value="-1" id="wicket">Wicket<br>
+            <input type="radio" class="runs" name="runs" value="7">Wide<br>
+            <input type="checkbox" class="add" name="noBall" value="8" id="noBall">No Ball<br>
+            <input type="checkbox" class="add" name="bye" value="9" id="bye">Bye<br>
+            <input type="checkbox" class="add" name="legBye" value="10" id="legBye">Leg-Bye<br>
+            <button id="playBall" type="button">Ball</button>
+        </form>
+    </div><br><br>
+    <div id="currentInfo">
+    </div>
+    <button type="button" id="navigateScoreboard">Go to Scoreboard</button>
+</body>
+<script src="score.js"></script>
+</html>

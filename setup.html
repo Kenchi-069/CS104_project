@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="setup.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300..700&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Nova+Round&family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Doto:wght@100..900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="heading" id="header">
+        <span id="welcome">Welcome</span>
+        <span id="to">to</span>
+        <span id="live">live</span>
+        <span id="cricket">Cricket</span>
+    </div>
+    
+    <div class="mainBody">
+        <div class="formContainer">
+            <h2>Setup Your Match</h2>
+            <form id="matchForm">
+                <label for="team1">Team 1 name:</label><br>
+                <input type="text" id="team1" name="team1" required>
+    
+                <label for="team2">Team 2 name:</label><br>
+                <input type="text" id="team2" name="team2" required>
+    
+                <label for="toss">Toss won by:</label><br>
+                <select id="toss" name="toss">
+                    <option value="team1">Team 1</option>
+                    <option value="team2">Team 2</option>
+                </select><br>
+    
+                <label for="tossResult">Toss decision:</label><br>
+                <select id="tossResult" name="tossResult">
+                    <option value="bat">Bat</option>
+                    <option value="bowl">Bowl</option>
+                </select>
+    
+                <button id="startMatch">Start Match</button>
+            </form>
+        </div>
+    </div>
+    
+    <div id="redirect">
+        <button onclick="window.location.href='history.html'" id="viewHistory">View Match History</button>
+        <button onclick="window.location.href='random.html'" id="simulate">Simulate a match</button>
+    </div>
+</body>
+<script src="score.js"></script>
+
+</html>
