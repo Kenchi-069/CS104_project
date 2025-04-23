@@ -38,7 +38,9 @@
             </div>
         </div>
 
-        
+        <div class="match-progress">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
         <div id="runs">
             <h2>Record Ball</h2>
             <form id="runsForm">
@@ -89,11 +91,16 @@
             </form>
             <button id="playBall" type="button">Ball</button>
         </div>
-        <div id="scoreboard" style="grid-column: 1 / -1">
-            <h2>Current Match Status</h2>
+        <div class="live-commentary" id="commentary">
+            <div class="commentary-entry"></div>
+        </div>
+        <div id="tables-container">
+            <div id="scoreboard">
+                <h2>Current Match Status</h2>
+            </div>
         </div>
         <button type="button" id="navigateScoreboard">Go to Scoreboard</button>
     </div>
-    <script src="score.js"></script>
+    <script type="module" src="score.js"></script>
 </body>
 </html>

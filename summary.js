@@ -50,7 +50,7 @@ function won(team1,team2) {
     else if(team2.runs > team1.runs) return team2;
     else return 0;
 }
-export function clearLocalStorage(excludeKeys = []) {
+function clearLocalStorage(excludeKeys = []) {
     const keysToKeep = new Set(excludeKeys);
     const keys = Object.keys(localStorage);
 

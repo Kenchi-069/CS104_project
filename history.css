@@ -1,0 +1,123 @@
+
+/* Buttons */
+button {
+    padding: 12px 24px;
+    border-radius: 50px;
+    border: none;
+    font-size: 1.2rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 3px 3px 0 #000;
+    margin: 10px 5px;
+}
+
+button:hover {
+    transform: translateY(-2px);
+    box-shadow: 5px 5px 0 #000;
+}
+
+button:active {
+    transform: translateY(1px);
+    box-shadow: 2px 2px 0 #000;
+}
+
+.back-btn {
+    background-color: #29a329;
+    color: white;
+}
+
+.back-btn:hover {
+    background-color: #1f7a1f;
+}
+
+#resetHistory {
+    background-color: #e74c3c;
+    color: white;
+}
+
+#resetHistory:hover {
+    background-color: #c0392b;
+}
+
+/* Table Styles */
+#matches-container {
+    background-color: rgba(44, 44, 44, 0.8);
+    border-radius: 20px;
+    padding: 20px;
+    margin: 30px 0;
+    border: 4px solid #005c19;
+    box-shadow: 0 0 0 4px #064500, 0 0 20px rgba(43, 211, 5, 0.5);
+    animation: borderPulse 5s infinite ease-in-out;
+    overflow-x: auto;
+    width: 60%;
+}
+
+@keyframes borderPulse {
+    0%, 100% { box-shadow: 0 0 0 4px #064500, 0 0 10px rgba(172, 124, 2, 0.2); }
+    50% { box-shadow: 0 0 0 4px #03812b, 0 0 30px rgba(43, 211, 5, 0.774); }
+}
+
+
+/* Highlight winner column */
+td:nth-child(4) {
+    font-weight: bold;
+    color: #d4af37;
+}
+
+/* No matches message */
+#matches-container p {
+    text-align: center;
+    font-size: 1.2rem;
+    padding: 20px;
+    color: #fea88b;
+}
+
+
+@media (max-width: 992px) {
+    h1 {
+        font-size: 2.5rem;
+    }
+    
+    table {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+}
+
+@media (max-width: 768px) {
+    h1 {
+        font-size: 2rem;
+    }
+    
+    button {
+        font-size: 1rem;
+        padding: 10px 20px;
+    }
+    
+    th, td {
+        padding: 8px 10px;
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 576px) {
+    #matches-container {
+        padding: 15px;
+    }
+    
+    h1 {
+        font-size: 1.8rem;
+    }
+    
+    th {
+        font-size: 0.9rem;
+        padding: 6px 8px;
+    }
+    
+    td {
+        font-size: 0.85rem;
+        padding: 6px 8px;
+    }
+}

@@ -1,7 +1,10 @@
+
 * {
-    margin: 0px;
-    padding: 0px;
-    font-family: "Pixelify Sans", sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Pixelify Sans', sans-serif;
+    image-rendering: pixelated;
 }
 
 body {
@@ -11,7 +14,6 @@ body {
     color: white;
     padding: 20px;
     min-height: 100vh;
-    font-family: 'Roboto', sans-serif;
 }
 
 @keyframes backgroundShift {
@@ -20,42 +22,37 @@ body {
     100% { background-position: 0% 50%; }
 }
 
-span {
-    padding: 0px;
-    margin: 0px;
-}
 .heading {
     display: block;
     justify-self: center;
     justify-content: center;
     align-content: center;
-    font-family: "Doto", sans-serif;
+    font-family: 'Doto', sans-serif;
     height: 100vh;
     width: auto;
-    margin: 0px;
-    padding: 0px;
+    margin: 0;
+    padding: 0;
     animation: appear 2s forwards;
 }
+
 @keyframes appear {
-    from {
-        transform: translateY(50px);
-        opacity: 0%;
-    }
-    to {
-        opacity: 100%
-    }
+    from { transform: translateY(50px); opacity: 0%; }
+    to { opacity: 100%; }
 }
+
 #welcome {
     font-size: 6rem;
     font-weight: bold;
     color: #eeeeee;
     display: block;
+    text-shadow: 3px 3px 0 #000;
 }
 
 #to {
     font-size: 4.94rem;
     color: #8a8a8a;
     display: inline;
+    text-shadow: 2px 2px 0 #000;
 }
 
 #live {
@@ -66,6 +63,7 @@ span {
     display: inline;
     margin-left: 20px;
     padding: 4px;
+    box-shadow: 4px 4px 0 #000;
 }
 
 #cricket {
@@ -76,7 +74,8 @@ span {
     color: transparent;
     display: block;
     text-transform: uppercase;
-    margin-top: 0px;
+    margin-top: 0;
+    text-shadow: 4px 4px 0 #000;
 }
 
 .mainBody {
@@ -84,35 +83,18 @@ span {
     margin-right: 100px;
     border-radius: 40px;
     justify-content: center;
-    border: 10px rgb(24, 127, 41) ;
+    border: 10px solid rgb(24, 127, 41);
     display: flex;
     font-weight: bold;
     color: white;
     font-size: 2rem;
     padding-top: 10%;
-    padding-bottom:10%;
+    padding-bottom: 10%;
+    background-color: rgba(44, 44, 44, 0.8);
+    backdrop-filter: blur(5px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
 }
 
-@keyframes float {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-10px); }
-}
-
-
-button {
-    font-size: 1.5rem;
-    border-radius: 50px;
-    border: none;
-    padding: 10px;
-}
-
-input[type="text"] {
-    width: 350px; 
-    height: 35px;
-    border-radius: 20px;
-    font-size: medium;
-    justify-self: center;
-}
 .formContainer {
     background-color: #2c2c2c;
     padding: 40px;
@@ -121,109 +103,218 @@ input[type="text"] {
     display: flex;
     flex-direction: row;
     gap: 20px;
-}
-
-.formContainer h2 {
-    text-align: center;
-    font-family: "Pixelify Sans", sans-serif;
-    font-size: 4rem;
-    margin-bottom: 20px;
-    align-self: center;
-    padding-right: 10%;
-
-    background: linear-gradient(135deg, #064500, #03812b, #ac7c02);
-    background-clip: text;
-
-    color: transparent;
-
-    text-shadow:
-        1px 1px 1px #1bf40c,   /* Subtle 3D edge */
-        2px 2px 2px #5c3a00,   /* Deeper edge */
-        3px 3px 3px rgba(0, 0, 0, 0.2); /* Soft shadow */
-
-    animation: float 4s ease-in-out infinite;
-}
-
-@keyframes shine {
-    0% { filter: brightness(1); }
-    50% { filter: brightness(1.2); }
-    100% { filter: brightness(1); }
-}
-
-#redirect {
-    display: flex;
-    justify-content: center;
-}
-
-#viewHistory {
-    background-color: #94571d;
-    color: white;
-    transition: background-color 0.3s ease, transform 0.3s ease;
-    height: 50px;
-    width: auto;
-    justify-self: center;
-    margin: 10px;
-}
-#viewHistory:hover {
-    background-color: #4f2a02; 
-    transform: scale(1.1);     
-}
-
-#simulate {
-    background-color: #0f65c6;
-    color: white;
-    transition: background-color 0.3s ease, transform 0.3s ease;
-    height: 50px;
-    width: auto;
-    margin: 10px;
-}
-
-#simulate:hover {
-    background-color: #043f82; 
-    transform: scale(1.1);  
-}
-form label {
-    margin-bottom: 5px;
-}
-
-form input{
-    margin-bottom: 15px;
-    padding: 2x;
-    font-size: 1rem;
-}
-form select{
-    width: 100px;
-    border-radius: 20px;
-    margin-bottom: 10px;
-    padding:  8px;
-    font-size: 1rem;
-}
-
-#startMatch {
-    background-color: #29a329;
-    color: white;
-    cursor: pointer;
-    border: white 100px;
-    width: 100%;
-    font-weight: bold;
-    font-size: 1.5rem;
-    transition: background-color 0.3s ease, transform 0.3s ease;
-}
-
-#startMatch:hover {
-    background-color: #1f7a1f; /* darker shade */
-    transform: scale(1.01);     /* enlarges text and button slightly */
-}
-.formContainer {
     border: 10px solid #005c19;
     box-shadow: 0 0 20px rgb(0, 55, 23);
     animation: borderPulse 5s infinite ease-in-out;
 }
 
 @keyframes borderPulse {
-    0%, 100% { box-shadow: 0 0 10px rgba(172, 124, 2, 0.2); }
-    50% { box-shadow: 0 0 50px rgba(43, 211, 5, 0.774); }
+    0%, 100% { box-shadow: 0 0 10px rgba(172, 124, 2, 0.2), 0 0 0 10px #005c19; }
+    50% { box-shadow: 0 0 50px rgba(43, 211, 5, 0.774), 0 0 0 10px #03812b; }
 }
 
+.formContainer h2 {
+    text-align: center;
+    font-family: 'Pixelify Sans', sans-serif;
+    font-size: 4rem;
+    margin-bottom: 20px;
+    align-self: center;
+    padding-right: 10%;
+    background: linear-gradient(135deg, #064500, #03812b, #ac7c02);
+    background-clip: text;
+    color: transparent;
+    text-shadow: 1px 1px 1px #1bf40c, 2px 2px 2px #5c3a00, 3px 3px 3px rgba(0, 0, 0, 0.2);
+    animation: float 4s ease-in-out infinite;
+}
 
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
 
+form label {
+    margin-bottom: 5px;
+    font-size: 1.2rem;
+    color: #ccc;
+    text-shadow: 1px 1px 0 #000;
+}
+
+input[type="text"] {
+    width: 350px;
+    height: 40px;
+    border-radius: 20px;
+    font-size: 1rem;
+    padding: 0 15px;
+    background-color: #333;
+    border: 2px solid #444;
+    color: white;
+    box-shadow: inset 2px 2px 0 #000;
+    transition: border 0.3s ease;
+}
+
+input[type="text"]:focus {
+    outline: none;
+    border-color: #29a329;
+    box-shadow: inset 2px 2px 0 #000, 0 0 10px rgba(41, 163, 41, 0.5);
+}
+
+form select {
+    width: auto;
+    height: 40px;
+    border-radius: 20px;
+    margin-bottom: 10px;
+    padding: 0 15px;
+    font-size: 1rem;
+    background-color: #333;
+    border: 2px solid #444;
+    color: white;
+    box-shadow: inset 2px 2px 0 #000;
+}
+
+button {
+    font-size: 1.5rem;
+    border-radius: 50px;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 3px 3px 0 #000;
+}
+
+button:hover {
+    transform: translateY(-2px);
+    box-shadow: 5px 5px 0 #000;
+}
+
+button:active {
+    transform: translateY(1px);
+    box-shadow: 2px 2px 0 #000;
+}
+
+#startMatch {
+    background-color: #29a329;
+    color: white;
+    width: 100%;
+    font-weight: bold;
+    margin-top: 20px;
+}
+
+#startMatch:hover {
+    background-color: #1f7a1f;
+}
+
+#redirect {
+    display: flex;
+    justify-content: center;
+    margin-top: 2rem;
+    gap: 1rem;
+}
+
+#viewHistory {
+    background-color: #94571d;
+    color: white;
+    transition: all 0.3s ease;
+    height: 50px;
+    padding: 0 30px;
+}
+
+#viewHistory:hover {
+    background-color: #4f2a02;
+    transform: scale(1.05);
+}
+
+#simulate {
+    background-color: #0f65c6;
+    color: white;
+    transition: all 0.3s ease;
+    height: 50px;
+    padding: 0 30px;
+}
+
+#simulate:hover {
+    background-color: #043f82;
+    transform: scale(1.05);
+}
+
+@media (max-width: 1200px) {
+    .mainBody {
+        margin-left: 50px;
+        margin-right: 50px;
+    }
+    
+    .formContainer {
+        width: 80%;
+    }
+}
+
+@media (max-width: 768px) {
+    .mainBody {
+        margin-left: 20px;
+        margin-right: 20px;
+        padding-top: 5%;
+        padding-bottom: 5%;
+    }
+    
+    .formContainer {
+        width: 100%;
+        flex-direction: column;
+    }
+    
+    #welcome {
+        font-size: 4rem;
+    }
+    
+    #to {
+        font-size: 3rem;
+    }
+    
+    #live {
+        font-size: 5rem;
+    }
+    
+    #cricket {
+        font-size: 8rem;
+    }
+    
+    .formContainer h2 {
+        font-size: 3rem;
+        padding-right: 0;
+    }
+}
+
+@media (max-width: 480px) {
+    .mainBody {
+        margin-left: 10px;
+        margin-right: 10px;
+    }
+    
+    #redirect {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    #welcome {
+        font-size: 3rem;
+    }
+    
+    #to {
+        font-size: 2rem;
+    }
+    
+    #live {
+        font-size: 3rem;
+        margin-left: 10px;
+    }
+    
+    #cricket {
+        font-size: 5rem;
+    }
+    
+    .formContainer h2 {
+        font-size: 2rem;
+    }
+    
+    input[type="text"] {
+        width: 100%;
+    }
+}

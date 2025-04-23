@@ -1,0 +1,161 @@
+/* summary.css - Pixel Cricket Match Summary */
+
+/* Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Pixelify Sans', sans-serif;
+    image-rendering: pixelated;
+}
+
+body {
+    background: linear-gradient(-45deg, #121212, #1e1e1e, #151515, #222);
+    background-size: 400% 400%;
+    animation: backgroundShift 15s ease infinite;
+    color: white;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    text-align: center;
+}
+
+@keyframes backgroundShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* Result Display */
+#whoWon {
+    background-color: rgba(44, 44, 44, 0.8);
+    border-radius: 20px;
+    padding: 30px;
+    margin-bottom: 40px;
+    border: 4px solid #005c19;
+    box-shadow: 0 0 0 4px #064500, 0 0 20px rgba(43, 211, 5, 0.5);
+    animation: borderPulse 5s infinite ease-in-out;
+    font-size: 2.5rem;
+    max-width: 800px;
+    width: 100%;
+}
+
+@keyframes borderPulse {
+    0%, 100% { box-shadow: 0 0 0 4px #064500, 0 0 10px rgba(172, 124, 2, 0.2); }
+    50% { box-shadow: 0 0 0 4px #03812b, 0 0 30px rgba(43, 211, 5, 0.774); }
+}
+
+/* Buttons Container */
+body > div:last-child {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+/* Button Styles */
+button {
+    margin-bottom: 10px;
+    padding: 15px 30px;
+    border-radius: 50px;
+    border: none;
+    font-size: 1.2rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 3px 3px 0 #000;
+    min-width: 200px;
+}
+
+button:hover {
+    transform: translateY(-2px);
+    box-shadow: 5px 5px 0 #000;
+}
+
+button:active {
+    transform: translateY(1px);
+    box-shadow: 2px 2px 0 #000;
+}
+
+#saveMatch {
+    background-color: #29a329;
+    color: white;
+}
+
+#saveMatch:hover {
+    background-color: #1f7a1f;
+}
+
+#newMatch {
+    background-color: #0f65c6;
+    color: white;
+}
+
+#newMatch:hover {
+    background-color: #0a4d9b;
+}
+
+button[onclick="window.location.href='history.html'"] {
+    background-color: #94571d;
+    color: white;
+}
+
+button[onclick="window.location.href='history.html'"]:hover {
+    background-color: #7a470e;
+}
+
+/* Trophy Animation */
+#whoWon::before {
+    content: "🏆";
+    display: block;
+    font-size: 4rem;
+    margin-bottom: 20px;
+    animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0) rotate(-5deg); }
+    50% { transform: translateY(-15px) rotate(5deg); }
+}
+
+@media (max-width: 768px) {
+    #whoWon {
+        font-size: 2rem;
+        padding: 20px;
+    }
+    
+    button {
+        font-size: 1rem;
+        padding: 12px 24px;
+        min-width: 160px;
+    }
+    
+    #whoWon::before {
+        font-size: 3rem;
+    }
+}
+
+@media (max-width: 480px) {
+    #whoWon {
+        font-size: 1.5rem;
+        padding: 15px;
+    }
+    
+    body > div:last-child {
+        flex-direction: column;
+        gap: 15px;
+        width: 100%;
+    }
+    
+    button {
+        width: 100%;
+    }
+    
+    #whoWon::before {
+        font-size: 2.5rem;
+    }
+}
