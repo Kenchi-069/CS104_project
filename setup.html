@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Setup your team</title>
     <link rel="stylesheet" href="setup.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -14,10 +14,15 @@
 </head>
 <body>
     <div class="heading" id="header">
-        <span id="welcome">Welcome</span>
-        <span id="to">to</span>
-        <span id="live">live</span>
-        <span id="cricket">Cricket</span>
+        <div id="logo">
+            <img src="welcome_transparent.png" alt="Welcome Logo" height="150">
+        </div>
+        <div id="text-group">
+            <span id="welcome">Welcome</span>
+            <span id="to">to</span>
+            <span id="live">live</span>
+            <span id="cricket">Cricket</span>
+        </div>
     </div>
     
     <div class="mainBody">
@@ -40,8 +45,10 @@
                 <select id="tossResult" name="tossResult">
                     <option value="bat">Bat</option>
                     <option value="bowl">Bowl</option>
-                </select>
-    
+                </select><br>
+
+                <label for="overs">Overs</label>
+                <input type="text" name="overs" id="overs" required>
                 <button id="startMatch">Start Match</button>
             </form>
         </div>

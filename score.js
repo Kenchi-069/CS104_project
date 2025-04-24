@@ -2,7 +2,6 @@ import {Batter, Bowler, Team, reviveTeam, won, addCommentary} from './match.js'
 let team1, team2;
 let sBatter = 0, nBatter = 1, cBowler = 0;
 let active, inactive;
-let overs = 2;
 let wasNoBall = false;
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -14,7 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const tossResult = document.getElementById("tossResult").value
         team1 = new Team(document.getElementById("team1").value, [], [], 0, 0, 0, 0, 0);
         team2 = new Team(document.getElementById("team2").value, [], [], 0, 0, 0, 0, 0);
-
+        const overs = document.getElementById("overs").value || 2;
         if (toss === "team1") {
             if (tossResult === "bat") {
                 team1.batting = 1;
@@ -122,6 +121,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     active.batters[sBatter].balls--;
                     inactive.bowlers[cBowler].balls--;
                     wasNoBall = true;
+                    addCommentary(`No ball bowled by ${inactive.bowlers[cBowler].name} to ${active.batters[sBatter].name}`);
+                    inactive.bowlers[cBowler].addComment(`No ball bowled by ${inactive.bowlers[cBowler].name} to ${active.batters[sBatter].name}`);
+                    active.batters[sBatter].addComment(`No ball bowled by ${inactive.bowlers[cBowler].name} to ${active.batters[sBatter].name}`);
                 }
                 else if(isBye) {
                     active.runs += run;
@@ -157,6 +159,8 @@ document.addEventListener('DOMContentLoaded', () => {
                         batsman1.style.display = "block";
                         sBatter = active.batters.length;
                         addCommentary(`WICKET! ${inactive.bowlers[cBowler].name} takes the wicket of ${active.batters[sBatter].name}`);
+                        inactive.bowlers[cBowler].addComment(`WICKET! ${inactive.bowlers[cBowler].name} takes the wicket of ${active.batters[sBatter].name}`);
+                        active.batters[sBatter].addComment(`WICKET! ${inactive.bowlers[cBowler].name} takes the wicket of ${active.batters[sBatter].name}`);
                     }
                 }
                 else if(run === 7){
@@ -165,6 +169,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     active.batters[sBatter].addRun(1);
                     inactive.bowlers[cBowler].addRun(1);
                     addCommentary(`WIDE! ${inactive.bowlers[cBowler].name} bowls a wide, extra run given`);
+                    inactive.bowlers[cBowler].addComment(`WIDE! ${inactive.bowlers[cBowler].name} bowls a wide, extra run given`);
                 }
                 else {
                     active.runs += run;
@@ -174,12 +179,18 @@ document.addEventListener('DOMContentLoaded', () => {
                     inactive.bowlers[cBowler].addRun(run);
                     if (run === 0) {
                         addCommentary(`Good ball by ${inactive.bowlers[cBowler].name}, dot ball`);
+                        inactive.bowlers[cBowler].addComment(`Good ball by ${inactive.bowlers[cBowler].name}, dot ball`);
                     } else if (run === 4) {
                         addCommentary(`FOUR! ${active.batters[sBatter].name} hits a boundary off ${inactive.bowlers[cBowler].name}`);
+                        inactive.bowlers[cBowler].addComment(`FOUR! ${active.batters[sBatter].name} hits a boundary off ${inactive.bowlers[cBowler].name}`);
+                        active.batters[sBatter].addComment(`FOUR! ${active.batters[sBatter].name} hits a boundary off ${inactive.bowlers[cBowler].name}`);
                     } else if (run === 6) {
                         addCommentary(`SIX! ${active.batters[sBatter].name} smashes ${inactive.bowlers[cBowler].name} for a maximum`);
+                        inactive.bowlers[cBowler].addComment(`SIX! ${active.batters[sBatter].name} smashes ${inactive.bowlers[cBowler].name} for a maximum`);
+                        active.batters[sBatter].addComment(`SIX! ${active.batters[sBatter].name} smashes ${inactive.bowlers[cBowler].name} for a maximum`);
                     } else {
                         addCommentary(`${run} run${run > 1 ? 's' : ''} taken by ${active.batters[sBatter].name}`);
+                        active.batters[sBatter].addComment(`${run} run${run > 1 ? 's' : ''} taken by ${active.batters[sBatter].name}`);
                     }
                     if (run%2 === 1) {
                         let temp = sBatter;
@@ -200,7 +211,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         window.location.href = "summary.html";
                     }
                 }
-                if(!active.played && (active.balls === overs*6 || active.wickets === 10)) {
+                if(active.balls === overs*6 || active.wickets === 10) {
                     if(!inactive.played){
                         sBatter = 0; 
                         nBatter = 1;
@@ -217,7 +228,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         batsman1.style.display = "block";
                         batsman2.style.display = "block";
                         bowlerDiv.style.display = "block";
-                        addCommentary(`All out! ${matchData.active.name} finishes at ${matchData.active.runs}/${matchData.active.wickets}`);
+                        addCommentary(`All out! ${active.name} finishes at ${active.runs}/${active.wickets}`);
                     }
                     else {
                         active.played = 1;
@@ -236,9 +247,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     inactive.bowlers[cBowler].addBall();
                     inactive.bowlers[cBowler].addOver();
                     bowlerDiv.style.display = "block";
-                    cBowler++;
                     [sBatter, nBatter] = [nBatter, sBatter]
-                    addCommentary(`Over completed. New bowler ${inactive.bowlers[cBowler].name} comes into the attack`);
                 }
                 selectedRun.checked = false;
                 updateLive();
@@ -263,7 +272,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const name = strikerInput.value.trim(); 
             if (name !== "") {
                 if (!active.batters.some(b => b.name === name)) {
-                    const striker = new Batter(name, 0, 0, 0, 0, active.name);
+                    const striker = new Batter(name, 0, 0, 0, 0, active.name, []);
                     active.addBatter(striker);
                     batsman1.style.display = "none";
                     addCommentary(`New batter ${striker.name} comes to the crease`);
@@ -284,9 +293,10 @@ document.addEventListener('DOMContentLoaded', () => {
             const name = nonStrikerInput.value.trim();
             if (name !== "") {
                 if (!active.batters.some(b => b.name === name)) {
-                    const nStriker = new Batter(name, 0, 0, 0, 0, active.name);
+                    const nStriker = new Batter(name, 0, 0, 0, 0, active.name, []);
                     active.addBatter(nStriker);
                     batsman2.style.display = "none";
+                    addCommentary(`New batter ${nStriker.name} comes to the crease`);
                 } else {
                     alert("Batter already exists:", name);
                 }
@@ -304,11 +314,14 @@ document.addEventListener('DOMContentLoaded', () => {
             const name = bowlerInput.value.trim();
             if (name !== "") {
                 if (!inactive.bowlers.some(b => b.name === name)) {
-                    const bowler = new Bowler(name, 0, 0, 0, 0, inactive.name);
+                    const bowler = new Bowler(name, 0, 0, 0, 0, inactive.name, []);
                     inactive.addBowler(bowler);
+                    cBowler = inactive.bowlers.length - 1;
                     bowlerDiv.style.display = "none";
+                    addCommentary(`Over completed. New bowler ${bowler.name} comes into the attack`);
                 } else {
-                    alert("Bowler already exists:", name);
+                    cBowler = inactive.bowlers.findIndex(bowler => bowler.name === name);
+                    addCommentary(`Over completed. Bowler ${name} once again comes into the attack`);
                 }
             } else {
                 alert("No name entered for bowler.");
@@ -320,7 +333,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if(scoreboardBtn){
         scoreboardBtn.addEventListener('click', (event) => {
 
-            if( batsman1.style.display !== "none" && batsman2.style.display !== "none" && bowlerDiv.style.display !== "none") {
+            if( batsman1.style.display === "none" && batsman2.style.display === "none" && bowlerDiv.style.display === "none") {
                 event.preventDefault();
                 saveState();
                 window.location.href = "scoreboard.html";

@@ -5,274 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cricket Match Simulator</title>
     <link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&display=swap" rel="stylesheet">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Pixelify Sans', sans-serif;
-            image-rendering: pixelated;
-        }
-
-        body {
-            background: linear-gradient(-45deg, #121212, #1e1e1e, #151515, #222);
-            background-size: 400% 400%;
-            animation: backgroundShift 15s ease infinite;
-            color: white;
-            min-height: 100vh;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        @keyframes backgroundShift {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-
-        h1 {
-            font-size: 3rem;
-            margin: 20px 0;
-            color: #d4af37;
-            text-shadow: 3px 3px 0 #000;
-            text-align: center;
-        }
-
-        .simulator-container {
-            background-color: rgba(44, 44, 44, 0.8);
-            border-radius: 20px;
-            padding: 30px;
-            width: 100%;
-            max-width: 800px;
-            border: 4px solid #005c19;
-            box-shadow: 0 0 0 4px #064500, 0 0 20px rgba(43, 211, 5, 0.5);
-            animation: borderPulse 5s infinite ease-in-out;
-            margin-bottom: 30px;
-        }
-
-        @keyframes borderPulse {
-            0%, 100% { box-shadow: 0 0 0 4px #064500, 0 0 10px rgba(172, 124, 2, 0.2); }
-            50% { box-shadow: 0 0 0 4px #03812b, 0 0 30px rgba(43, 211, 5, 0.774); }
-        }
-
-        .controls {
-            display: flex;
-            gap: 15px;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
-
-        button {
-            padding: 12px 24px;
-            border-radius: 50px;
-            border: none;
-            font-size: 1.2rem;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 3px 3px 0 #000;
-            min-width: 200px;
-        }
-
-        button:hover {
-            transform: translateY(-2px);
-            box-shadow: 5px 5px 0 #000;
-        }
-
-        button:active {
-            transform: translateY(1px);
-            box-shadow: 2px 2px 0 #000;
-        }
-
-        #startSimulation {
-            background-color: #29a329;
-            color: white;
-        }
-
-        #startSimulation:hover {
-            background-color: #1f7a1f;
-        }
-
-        #pauseSimulation {
-            background-color: #f39c12;
-            color: white;
-            display: none;
-        }
-
-        #pauseSimulation:hover {
-            background-color: #d35400;
-        }
-
-        #resetSimulation {
-            background-color: #e74c3c;
-            color: white;
-        }
-
-        #resetSimulation:hover {
-            background-color: #c0392b;
-        }
-
-        .match-info {
-            margin-bottom: 20px;
-            font-size: 1.2rem;
-            text-align: center;
-        }
-
-        .simulation-speed {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 20px;
-            justify-content: center;
-        }
-
-        .simulation-speed label {
-            font-size: 1.1rem;
-        }
-
-        .simulation-speed select {
-            padding: 8px 12px;
-            border-radius: 10px;
-            background-color: #333;
-            border: 2px solid #444;
-            color: white;
-            font-size: 1rem;
-        }
-
-        .match-progress {
-            width: 100%;
-            height: 20px;
-            background-color: #333;
-            border-radius: 10px;
-            margin-bottom: 20px;
-            overflow: hidden;
-        }
-
-        .progress-bar {
-            height: 100%;
-            background: linear-gradient(90deg, #06a42d, #058bce);
-            width: 0%;
-            transition: width 0.5s ease;
-        }
-
-        .live-commentary {
-            background-color: rgba(51, 51, 51, 0.7);
-            border-radius: 10px;
-            padding: 15px;
-            height: 300px;
-            overflow-y: auto;
-            margin-bottom: 20px;
-            font-family: monospace;
-            border: 2px solid #444;
-        }
-
-        .commentary-entry {
-            margin-bottom: 8px;
-            padding-bottom: 8px;
-            border-bottom: 1px solid #444;
-        }
-
-        .score-display {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-            margin-bottom: 20px;
-        }
-
-        .team-score {
-            background-color: rgba(51, 51, 51, 0.7);
-            border-radius: 10px;
-            padding: 15px;
-            text-align: center;
-            border: 2px solid #444;
-        }
-
-        .team-name {
-            font-size: 1.3rem;
-            color: #d4af37;
-            margin-bottom: 10px;
-        }
-
-        .team-runs {
-            font-size: 2rem;
-            font-weight: bold;
-        }
-
-        .team-overs {
-            font-size: 1.2rem;
-            color: #ccc;
-        }
-
-        .batter-list, .bowler-list {
-            margin-top: 20px;
-        }
-
-        .batter-list h3, .bowler-list h3 {
-            color: #fea88b;
-            margin-bottom: 10px;
-            text-align: center;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 10px;
-        }
-
-        th, td {
-            padding: 8px 12px;
-            border-bottom: 1px solid #444;
-            text-align: left;
-        }
-
-        th {
-            background-color: #1a5e1a;
-            color: #d4af37;
-        }
-
-        tr:nth-child(even) {
-            background-color: rgba(65, 65, 65, 0.5);
-        }
-
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            h1 {
-                font-size: 2.2rem;
-            }
-            
-            .simulator-container {
-                padding: 20px;
-            }
-            
-            .score-display {
-                grid-template-columns: 1fr;
-            }
-            
-            button {
-                font-size: 1rem;
-                padding: 10px 20px;
-                min-width: 160px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            h1 {
-                font-size: 1.8rem;
-            }
-            
-            .controls {
-                flex-direction: column;
-                align-items: center;
-            }
-            
-            button {
-                width: 100%;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="random.css">
 </head>
 <body>
     <h1>CRICKET MATCH SIMULATOR</h1>
@@ -360,7 +93,6 @@
     <script src="score.js"></script>
     <script type="module">
         import {Match, Batter, Bowler, Team, reviveTeam, won, addCommentary} from './match.js'
-        // Simulation variables
         let simulationInterval;
         let isSimulating = false;
         let simulationSpeed = 500;
@@ -374,11 +106,10 @@
             cBowler: 0,
             overs: 2,
             currentBall: 0,
-            totalBalls: 12, // 2 overs * 6 balls
+            totalBalls: 12, 
             commentary: []
         };
 
-        // DOM elements
         const startBtn = document.getElementById('startSimulation');
         const pauseBtn = document.getElementById('pauseSimulation');
         const resetBtn = document.getElementById('resetSimulation');
@@ -394,7 +125,6 @@
         const battersBody = document.getElementById('battersBody');
         const bowlersBody = document.getElementById('bowlersBody');
 
-        // Initialize simulation
         function initSimulation() {
             console.log("Inside Init");
             const teamNames = [
@@ -407,8 +137,7 @@
             
             matchData.team1 = new Team(randomName1, [], [], 0, 0, 0, 0, 0);
             matchData.team2 = new Team(randomName2, [], [], 0, 0, 0, 0, 0);
-            
-            // Randomly decide toss
+
             const tossWinner = Math.random() > 0.5 ? matchData.team1 : matchData.team2;
             const tossDecision = Math.random() > 0.5 ? "bat" : "bowl";
             
@@ -432,19 +161,16 @@
             
             matchData.active = matchData.team1.batting ? matchData.team1 : matchData.team2;
             matchData.inactive = matchData.team1.batting ? matchData.team2 : matchData.team1;
-            
-            // Create initial players
+
             createPlayers(matchData.active, "Batter");
             createPlayers(matchData.active, "Batter");
             createPlayers(matchData.inactive, "Bowler");
-            
-            // Update UI
+
             updateTeamInfo();
             addCommentary(`Match between ${matchData.team1.name} and ${matchData.team2.name} is ready`);
             addCommentary(`Toss: ${tossWinner.name} wins and chooses to ${tossDecision} first`);
         }
 
-        // Create players for a team
         function createPlayers(team, type) {
             console.log("Inside create players");
             const playerNames = [
@@ -461,7 +187,6 @@
             }
         }
 
-        // Start simulation
         function startSimulation() {
             console.log("Inside start simulation");
             if (isSimulating) return;
@@ -476,7 +201,6 @@
             addCommentary("Match simulation started!");
         }
 
-        // Pause simulation
         function pauseSimulation() {
             console.log("Inside pause simulation");
             isSimulating = false;
@@ -487,7 +211,6 @@
             addCommentary("Match simulation paused");
         }
 
-        // Reset simulation
         function resetSimulation() {
             console.log("Inside reset simulation");
             pauseSimulation();
@@ -512,12 +235,11 @@
             initSimulation();
         }
 
-        // Simulate a single ball
+
         function simulateBall() {
             console.log("Inside simulate Ball");
-            // Check if innings needs to change
+
             
-            // Simulate ball outcome
             const outcomes = [
                 { runs: 0, weight: 30 },
                 { runs: 1, weight: 25 },
@@ -525,12 +247,12 @@
                 { runs: 3, weight: 5 },
                 { runs: 4, weight: 15 },
                 { runs: 6, weight: 5 },
-                { runs: -1, weight: 5 } // wicket
+                { runs: -1, weight: 5 } 
             ];
             
-            // Add extras occasionally
+            
             if (Math.random() < 0.1) {
-                outcomes.push({ runs: 7, weight: 5 }); // wide
+                outcomes.push({ runs: 7, weight: 5 }); 
             }
             
             const totalWeight = outcomes.reduce((sum, outcome) => sum + outcome.weight, 0);
@@ -545,24 +267,24 @@
                 random -= outcome.weight;
             }
             
-            // Process the ball outcome
+            
             processBall(selectedOutcome.runs);
             
-            // Update progress
+            
             matchData.currentBall++;
             const totalProgress = (matchData.currentBall / (matchData.totalBalls * 2)) * 100;
             progressBar.style.width = `${totalProgress}%`;
         }
 
-        // Process ball outcome
+        
         function processBall(run) {
             console.log("Inside process ball");
             console.log(matchData.currentBall)
             
-            // Update team stats
+            
             matchData.active.addBall();
             
-            // Handle different outcomes
+            
             if (run === -1) { // Wicket
                 matchData.active.addWicket();
                 matchData.active.batters[matchData.sBatter].addBall();
@@ -570,28 +292,29 @@
                 matchData.inactive.bowlers[matchData.cBowler].addBall();
                 createPlayers(matchData.active, "Batter");
                 addCommentary(`WICKET! ${matchData.inactive.bowlers[matchData.cBowler].name} takes the wicket of ${matchData.active.batters[matchData.sBatter].name}`);
+                matchData.inactive.bowlers[matchData.cBowler].addComment(`WICKET! ${matchData.inactive.bowlers[matchData.cBowler].name} takes the wicket of ${matchData.active.batters[matchData.sBatter].name}`);
+                matchData.active.batters[matchData.sBatter].addComment(`WICKET! ${matchData.inactive.bowlers[matchData.cBowler].name} takes the wicket of ${matchData.active.batters[matchData.sBatter].name}`);
                 
-                // Check if all out
                 if (matchData.active.wickets >= 10) {
                     addCommentary(`All out! ${matchData.active.name} finishes at ${matchData.active.runs}/${matchData.active.wickets}`);
                     return;
                 }
                 
-                // Bring in new batter
+                
                 matchData.sBatter = matchData.active.batters.length - 1;
                 const newBatter = matchData.active.batters[matchData.sBatter];
                 console.log(matchData.sBatter)
                 addCommentary(`New batter ${matchData.active.batters[matchData.sBatter].name} comes to the crease`);
-                
-            } else if (run === 7) { // Wide
+                matchData.active.batters[matchData.sBatter].addComment(`New batter ${matchData.active.batters[matchData.sBatter].name} comes to the crease`);
+            } else if (run === 7) { 
                 matchData.active.runs++;
-                matchData.active.balls--; // Wide doesn't count as ball
+                matchData.active.balls--; 
                 matchData.active.batters[matchData.sBatter].addRun(1);
                 matchData.inactive.bowlers[matchData.cBowler].addRun(1);
                 
                 addCommentary(`WIDE! ${bowler.name} bowls a wide, extra run given`);
-                
-            } else { // Normal runs
+                matchData.inactive.bowlers[matchData.cBowler].addComment(`WIDE! ${bowler.name} bowls a wide, extra run given`);
+            } else {
                 matchData.active.runs += run;
                 matchData.active.batters[matchData.sBatter].addRun(run);
                 matchData.active.batters[matchData.sBatter].addBall();
@@ -600,30 +323,34 @@
                 
                 if (run === 0) {
                     addCommentary(`Good ball by ${matchData.inactive.bowlers[matchData.cBowler].name}, dot ball`);
+                    matchData.inactive.bowlers[matchData.cBowler].addComment(`Good ball by ${matchData.inactive.bowlers[matchData.cBowler].name}, dot ball`);
                 } else if (run === 4) {
                     addCommentary(`FOUR! ${matchData.active.batters[matchData.sBatter].name} hits a boundary off ${matchData.inactive.bowlers[matchData.cBowler].name}`);
+                    matchData.active.batters[matchData.sBatter].addComment(`FOUR! ${matchData.active.batters[matchData.sBatter].name} hits a boundary off ${matchData.inactive.bowlers[matchData.cBowler].name}`);
+                    matchData.inactive.bowlers[matchData.cBowler].addComment(`FOUR! ${matchData.active.batters[matchData.sBatter].name} hits a boundary off ${matchData.inactive.bowlers[matchData.cBowler].name}`);
                 } else if (run === 6) {
                     addCommentary(`SIX! ${matchData.active.batters[matchData.sBatter].name} smashes ${matchData.inactive.bowlers[matchData.cBowler].name} for a maximum`);
+                    matchData.active.batters[matchData.sBatter].addComment(`SIX! ${matchData.active.batters[matchData.sBatter].name} smashes ${matchData.inactive.bowlers[matchData.cBowler].name} for a maximum`);
+                    matchData.inactive.bowlers[matchData.cBowler].addComment(`SIX! ${matchData.active.batters[matchData.sBatter].name} smashes ${matchData.inactive.bowlers[matchData.cBowler].name} for a maximum`);
                 } else {
-                    addCommentary(`${run} run${run > 1 ? 's' : ''} taken by ${matchData.inactive.bowlers[matchData.cBowler].name}`);
+                    addCommentary(`${run} run${run > 1 ? 's' : ''} taken by ${matchData.active.batters[matchData.sBatter].name}`);
+                    matchData.active.batters[matchData.sBatter].addComment(`${run} run${run > 1 ? 's' : ''} taken by ${matchData.active.batters[matchData.sBatter].name}`);
                 }
-                
-                // Change strike for odd runs
+
                 if (run % 2 === 1) {
                     [matchData.sBatter, matchData.nBatter] = [matchData.nBatter, matchData.sBatter];
                 }
             }
-            
-            // Check if over is completed
-            if (matchData.active.balls % 6 === 0 && matchData.active.balls !== 0) {
+                if (matchData.active.balls % 6 === 0 && matchData.active.balls !== 0) {
                 matchData.inactive.bowlers[matchData.cBowler].addOver();
                 [matchData.sBatter, matchData.nBatter] = [matchData.nBatter, matchData.sBatter];
                 createPlayers(matchData.inactive, "Bowler");
-                // Change bowler after every over
+ 
                 matchData.cBowler = (matchData.cBowler + 1) % matchData.inactive.bowlers.length;
                 const newBowler = matchData.inactive.bowlers[matchData.cBowler];
                 
                 addCommentary(`Over completed. New bowler ${matchData.inactive.bowlers[matchData.cBowler].name} comes into the attack`);
+                matchData.inactive.bowlers[matchData.cBowler].addComment(`Over completed. New bowler ${matchData.inactive.bowlers[matchData.cBowler].name} comes into the attack`);
             }
             if (matchData.active.balls === matchData.overs * 6 || matchData.active.wickets >= 10 || (matchData.inactive.played && matchData.active.runs > matchData.inactive.runs)) {
                 if (!matchData.inactive.played) {
@@ -636,7 +363,7 @@
             updatePlayerStats();
         }
 
-        // Change innings
+
         function changeInnings() {
             console.log("Inside change innings");
             matchData.active.played = 1;
@@ -658,7 +385,7 @@
             updateTeamInfo();
         }
 
-        // End match
+
         function endMatch() {
             console.log("Inside end match");
             pauseSimulation();
@@ -694,18 +421,17 @@
             console.log("[DEBUG] Match saved:", matchData);
             addCommentary(`MATCH OVER! ${resultMessage}`);
             
-            // Show full scorecard
+
             addCommentary(`Final scores:`);
             addCommentary(`${matchData.team1.name}: ${matchData.team1.runs}/${matchData.team1.wickets} in ${Math.floor(matchData.team1.balls/6)}.${matchData.team1.balls%6} overs`);
             addCommentary(`${matchData.team2.name}: ${matchData.team2.runs}/${matchData.team2.wickets} in ${Math.floor(matchData.team2.balls/6)}.${matchData.team2.balls%6} overs`);
-            
-            // Update UI with final state
+
             updateTeamInfo();
             updatePlayerStats();
             window.location.href = "history.html";
         }
 
-        // Update team info display
+
         function updateTeamInfo() {
             console.log("Inside update team info");
             team1Name.textContent = matchData.team1.name;
@@ -716,7 +442,7 @@
             team2Runs.textContent = `${matchData.team2.runs}/${matchData.team2.wickets}`;
             team2Overs.textContent = `(${Math.floor(matchData.team2.balls/6)}.${matchData.team2.balls%6} overs)`;
             
-            // Highlight batting team
+
             if (matchData.active === matchData.team1) {
                 document.getElementById('team1Score').style.border = '2px solid #d4af37';
                 document.getElementById('team2Score').style.border = '2px solid #444';
@@ -726,10 +452,8 @@
             }
         }
 
-        // Update player stats display
         function updatePlayerStats() {
             console.log("Inside update player stats");
-            // Current batters
             battersBody.innerHTML = '';
             const striker = matchData.active.batters[matchData.sBatter];
             const nonStriker = matchData.active.batters[matchData.nBatter];
@@ -758,7 +482,7 @@
                 `;
             }
             
-            // Current bowlers
+
             bowlersBody.innerHTML = '';
             const bowler = matchData.inactive.bowlers[matchData.cBowler];
             
@@ -777,7 +501,6 @@
             }
         }
 
-        // Event listeners
         startBtn.addEventListener('click', startSimulation);
         pauseBtn.addEventListener('click', pauseSimulation);
         resetBtn.addEventListener('click', resetSimulation);
@@ -791,7 +514,7 @@
                 simulationSpeed = parseInt(this.value);
             }
         });
-        // Initialize
+
         initSimulation();
     </script>
 </body>

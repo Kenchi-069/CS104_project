@@ -15,13 +15,14 @@ export class Match {
     }
 }
 export class Batter {
-    constructor(name, runs, balls, fours, sixes, team) {
+    constructor(name, runs, balls, fours, sixes, team, commentary = []) {
         this.name = name;
         this.runs = runs;
         this.balls = balls;
         this.fours = fours;
         this.sixes = sixes;
         this.team = team;
+        this.commentary = commentary
     }
     addRun(run){
         this.runs+=run;
@@ -34,10 +35,13 @@ export class Batter {
     crr(){
         return this.balls ? (this.runs/this.balls)*6 : 0;
     }
+    addComment(text){
+        this.commentary.push(text)
+    }
 }
 
 export class Bowler {
-    constructor(name, balls, overs, runs, wickets, team) {
+    constructor(name, balls, overs, runs, wickets, team, commentary = []) {
         this.name = name;
         this.balls = balls;
         this.overs = overs;
@@ -46,6 +50,7 @@ export class Bowler {
         this.team = team;
         this.maidens = 0;
         this.currentOverRuns = 0;
+        this.commentary = commentary;
     }
 
     addRun(run){
@@ -67,6 +72,10 @@ export class Bowler {
             this.maidens++;
         }
         this.currentOverRuns = 0;
+    }
+
+    addComment(text){
+        this.commentary.push(text)
     }
 }
 
@@ -148,8 +157,8 @@ export function addCommentary(text) {
     entry.textContent = text;
     commentaryBox.appendChild(entry);
     commentaryBox.scrollTop = commentaryBox.scrollHeight;
-    let commentaryString = localStorage.getItem("commentary") || [];
-    commentaryString.append(text);
-    localStorage.setItem("commentary", commentaryString);
+    // let commentaryString = localStorage.getItem("commentary") || [];
+    // commentaryString.push(text);
+    // localStorage.setItem("commentary", commentaryString);
 }
 

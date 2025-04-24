@@ -60,3 +60,34 @@ function clearLocalStorage(excludeKeys = []) {
         }
     }
 }
+const team1 = JSON.parse(localStorage.getItem("team1"));
+const team2 = JSON.parse(localStorage.getItem("team2"));
+const team1P = team1.batters.concat(team1.bowlers);
+const team2P = team2.batters.concat(team2.bowlers);
+const players = team1P.concat(team2P)
+
+const searchResult = document.getElementById("searchResult");
+const dropDown = document.getElementById("myPlayers");
+
+players.forEach(player => {
+    const option = document.createElement("option");
+    option.value = player;
+    option.textContent = player;
+    dropDown.appendChild(option);
+});
+
+function fetchCommentary() {
+    const selectedName = dropDown.value;
+    let team;
+    let playerObj = team1P.find(p => p.name === selectedName);
+    if (playerObj) {
+        team = team1;
+    } else {
+        playerObj = team2P.find(p => p.name === selectedName);
+        team = team2;
+    }
+
+    playerObj.commentary.forEach (comment =>{
+        searchResult.textContent(comment);
+    })
+}

@@ -13,8 +13,13 @@
     <button id="saveMatch">Save Match</button>
     <button id="newMatch">New Match</button>
     <button onclick="window.location.href='history.html'">View Match History</button>
-
-    <script src="score.js"></script>
+    <div id="commentarySearch">
+        <label for="commmentaryS">Search commentary by name:</label>
+        <select name="commentaryS" id="myPlayers"></select>
+        <button type="button" onclick="fetchCommentary">Fetch Commentary</button>
+        <div id="searchResult"></div>
+    </div>
+    <script type="module" src="score.js"></script>
     <script type="module" src="summary.js"></script>
 </body>
 </html>

@@ -8,7 +8,7 @@
 }
 
 body {
-    background: linear-gradient(-45deg, #121212, #1e1e1e, #151515, #222);
+    background: linear-gradient(-45deg, #121212, #141414, #2b2b2b, #151515);
     background-size: 400% 400%;
     animation: backgroundShift 15s ease infinite;
     color: white;
@@ -34,24 +34,46 @@ body {
     padding: 0;
     animation: appear 2s forwards;
 }
-
+#logo {
+    float: left;
+}
 @keyframes appear {
     from { transform: translateY(50px); opacity: 0%; }
     to { opacity: 100%; }
+}
+
+#header {
+    display: flex;
+    align-items: center;
+    justify-self: center;
+    padding: 20px;
+    flex-wrap: wrap;
+}
+
+#logo {
+    margin-right: 30px;
+}
+img {
+    width: 400px;
+    height: auto;
+}
+#text-group {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    flex-wrap: wrap;
 }
 
 #welcome {
     font-size: 6rem;
     font-weight: bold;
     color: #eeeeee;
-    display: block;
     text-shadow: 3px 3px 0 #000;
 }
 
 #to {
     font-size: 4.94rem;
     color: #8a8a8a;
-    display: inline;
     text-shadow: 2px 2px 0 #000;
 }
 
@@ -60,10 +82,12 @@ body {
     color: white;
     background-image: linear-gradient(135deg, #fea88b, #ac0000);
     border-radius: 50px;
-    display: inline;
-    margin-left: 20px;
-    padding: 4px;
+    padding: 4px 20px;
+    margin-left: 10px;
+    text-shadow: 2px 2px 0 #000;
     box-shadow: 4px 4px 0 #000;
+    display: inline;
+    max-width: fit-content;
 }
 
 #cricket {
@@ -71,12 +95,12 @@ body {
     font-weight: bold;
     background-image: linear-gradient(135deg, #06a42d, #058bce);
     background-clip: text;
+    -webkit-background-clip: text;
     color: transparent;
-    display: block;
     text-transform: uppercase;
-    margin-top: 0;
-    text-shadow: 4px 4px 0 #000;
+    margin-top: 20px;
 }
+
 
 .mainBody {
     margin-left: 100px;
