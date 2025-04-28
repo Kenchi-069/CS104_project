@@ -32,8 +32,8 @@ export class Batter {
     addBall(){
         this.balls+=1;
     }
-    crr(){
-        return this.balls ? (this.runs/this.balls)*6 : 0;
+    sr(){
+        return this.balls ? (this.runs/this.balls)*100 : 0;
     }
     addComment(text){
         this.commentary.push(text)

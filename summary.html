@@ -14,10 +14,14 @@
     <button id="newMatch">New Match</button>
     <button onclick="window.location.href='history.html'">View Match History</button>
     <div id="commentarySearch">
-        <label for="commmentaryS">Search commentary by name:</label>
-        <select name="commentaryS" id="myPlayers"></select>
-        <button type="button" onclick="fetchCommentary">Fetch Commentary</button>
-        <div id="searchResult"></div>
+        <label for="commmentaryS1">Search commentary by name for Team 1:</label>
+        <select name="commentaryS1" id="myPlayersT1"></select>
+        <button type="button" onclick="fetchCommentaryT1()">Fetch Commentary</button>
+        <div id="searchResultT1"></div>
+        <label for="commmentaryS2">Search commentary by name for Team 2:</label>
+        <select name="commentaryS2" id="myPlayersT2"></select>
+        <button type="button" onclick="fetchCommentaryT2()">Fetch Commentary</button>
+        <div id="searchResultT2"></div>
     </div>
     <script type="module" src="score.js"></script>
     <script type="module" src="summary.js"></script>

@@ -3,7 +3,6 @@ let team1, team2;
 let sBatter = 0, nBatter = 1, cBowler = 0;
 let active, inactive;
 let wasNoBall = false;
-
 document.addEventListener('DOMContentLoaded', () => {
     const startMatch = document.getElementById("startMatch");
     if(startMatch) {
@@ -42,12 +41,14 @@ document.addEventListener('DOMContentLoaded', () => {
         localStorage.setItem("team2", JSON.stringify(team2));
         localStorage.setItem("toss", toss);
         localStorage.setItem("tossResult", tossResult);
+        localStorage.setItem("overs", overs);
         window.location.href = "live.html";
     });}
     team1 = reviveTeam(JSON.parse(localStorage.getItem("team1")));
     team2 = reviveTeam(JSON.parse(localStorage.getItem("team2")));
     const toss = localStorage.getItem("toss");
     const tossResult = localStorage.getItem("tossResult");
+    const overs = localStorage.getItem("overs");
     active = team1.batting === 1 ? team1 : team2;
     inactive = team1.batting === 1 ? team2 : team1;
 
@@ -238,7 +239,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         team2.batting = 0;
                         localStorage.setItem("team1",JSON.stringify(team1));
                         localStorage.setItem("team2",JSON.stringify(team2));
-                        addCommentary(`MATCH OVER! ${resultMessage}`);
+                        addCommentary(`MATCH OVER!`);
                         alert("Match is finished. Redirecting.....");
                         window.location.href = "summary.html";
                     }
@@ -264,71 +265,118 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 
-    if(strikerBtn) {
+    if (strikerBtn) {
         strikerBtn.addEventListener('click', (event) => {
-            event.preventDefault(); 
-
-        
-            const name = strikerInput.value.trim(); 
+            event.preventDefault();
+    
+            const name = strikerInput.value.trim();
+    
             if (name !== "") {
-                if (!active.batters.some(b => b.name === name)) {
+                if (inactive.played && (active.batters.length + active.bowlers.length >= 11 || inactive.batters + inactive.bowlers >= 11)) {
+                    if (!active.batters.some(b => b.name === name)) {
+                        alert("Team size exceeded, please choose an already played player.");
+                        return;
+                    }
+                }
+                
+                else if (!active.batters.some(b => b.name === name)) {
                     const striker = new Batter(name, 0, 0, 0, 0, active.name, []);
                     active.addBatter(striker);
                     batsman1.style.display = "none";
                     addCommentary(`New batter ${striker.name} comes to the crease`);
+                    striker.addComment(`New batter ${striker.name} comes to the crease`);
                 } else {
-                    alert("Batter already exists:", name);
+                    alert(`Batter "${name}" has already played.`);
                 }
             } else {
                 alert("No name entered for striker.");
             }
+    
             updateLive();
         });
     }
+    
 
-    if(nStrikerBtn){
+    if (nStrikerBtn) {
         nStrikerBtn.addEventListener('click', (event) => {
             event.preventDefault();
     
             const name = nonStrikerInput.value.trim();
+    
             if (name !== "") {
+                if (inactive.played && 
+                    (active.batters.length + active.bowlers.length === 11 || 
+                     inactive.batters.length + inactive.bowlers.length === 11)) {
+                     
+                    if (active.bowlers.some(bowler => bowler.name === name)) {
+                        alert("Team size exceeded. Please choose an already played player.");
+                        return;
+                    }
+                }
                 if (!active.batters.some(b => b.name === name)) {
                     const nStriker = new Batter(name, 0, 0, 0, 0, active.name, []);
                     active.addBatter(nStriker);
                     batsman2.style.display = "none";
                     addCommentary(`New batter ${nStriker.name} comes to the crease`);
+                    nStriker.addComment(`New batter ${nStriker.name} comes to the crease`);
                 } else {
-                    alert("Batter already exists:", name);
+                    alert(`Batter already exists: ${name}`);
                 }
             } else {
                 alert("No name entered for non-striker.");
             }
+    
             updateLive();
         });
     }
     
-    if(bowlerBtn){
+    
+    if (bowlerBtn) {
         bowlerBtn.addEventListener('click', (event) => {
-            event.preventDefault(); 
-        
+            event.preventDefault();
+    
             const name = bowlerInput.value.trim();
+    
             if (name !== "") {
-                if (!inactive.bowlers.some(b => b.name === name)) {
+                if (
+                    inactive.played &&
+                    (active.batters.length + active.bowlers.length >= 11 ||
+                     inactive.batters.length + inactive.bowlers.length >= 11)
+                ) {
+                    const alreadyPlayed = inactive.bowlers.some(bowler => bowler.name === name);
+                    if (!alreadyPlayed) {
+                        alert("Team size exceeded. Please choose an already played player.");
+                        return;
+                    }
+                }
+    
+                const existingBowlerIndex = inactive.bowlers.findIndex(b => b.name === name);
+                if (existingBowlerIndex === -1) {
                     const bowler = new Bowler(name, 0, 0, 0, 0, inactive.name, []);
                     inactive.addBowler(bowler);
                     cBowler = inactive.bowlers.length - 1;
                     bowlerDiv.style.display = "none";
-                    addCommentary(`Over completed. New bowler ${bowler.name} comes into the attack`);
+    
+                    if (inactive.bowlers.length === 1) {
+                        addCommentary(`First bowler ${bowler.name} comes into the attack`);
+                        bowler.addComment(`First bowler ${bowler.name} comes into the attack`);
+                    } else {
+                        addCommentary(`Over completed. New bowler ${bowler.name} comes into the attack`);
+                        bowler.addComment(`Over completed. New bowler ${bowler.name} comes into the attack`);
+                    }
                 } else {
-                    cBowler = inactive.bowlers.findIndex(bowler => bowler.name === name);
+                    cBowler = existingBowlerIndex;
                     addCommentary(`Over completed. Bowler ${name} once again comes into the attack`);
+                    inactive.bowlers[cBowler].addComment(`Over completed. Bowler ${name} once again comes into the attack`);
                 }
             } else {
                 alert("No name entered for bowler.");
             }
+    
             updateLive();
         });
     }
+    
     
     if(scoreboardBtn){
         scoreboardBtn.addEventListener('click', (event) => {
@@ -385,7 +433,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                 <td>${active.batters[sBatter].fours}</td>
                                 <td>${active.batters[sBatter].sixes}</td>
                                 <td>${active.batters[sBatter].balls}</td>
-                                <td>${((active.batters[sBatter].crr()*100)/6).toFixed(2)}</td>
+                                <td>${((active.batters[sBatter].sr())).toFixed(2)}</td>
                             </tr>
                             <tr>
                                 <td>Non-Striker</td>
@@ -394,7 +442,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                 <td>${active.batters[nBatter].fours}</td>
                                 <td>${active.batters[nBatter].sixes}</td>
                                 <td>${active.batters[nBatter].balls}</td>
-                                <td>${((active.batters[sBatter].crr()*100)/6).toFixed(2)}</td>
+                                <td>${((active.batters[sBatter].sr()).toFixed(2))}</td>
                             </tr>
                         </tbody>
                     </table>

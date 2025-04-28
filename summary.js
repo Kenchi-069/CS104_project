@@ -64,30 +64,54 @@ const team1 = JSON.parse(localStorage.getItem("team1"));
 const team2 = JSON.parse(localStorage.getItem("team2"));
 const team1P = team1.batters.concat(team1.bowlers);
 const team2P = team2.batters.concat(team2.bowlers);
-const players = team1P.concat(team2P)
 
-const searchResult = document.getElementById("searchResult");
-const dropDown = document.getElementById("myPlayers");
+const searchResultT1 = document.getElementById("searchResultT1");
+const dropDownT1 = document.getElementById("myPlayersT1");
+const searchResultT2 = document.getElementById("searchResultT2");
+const dropDownT2 = document.getElementById("myPlayersT2");
 
-players.forEach(player => {
+team1P.forEach(player => {
     const option = document.createElement("option");
-    option.value = player;
-    option.textContent = player;
-    dropDown.appendChild(option);
+    option.value = player.name;
+    option.textContent = player.name;
+    dropDownT1.appendChild(option);
 });
 
-function fetchCommentary() {
-    const selectedName = dropDown.value;
-    let team;
-    let playerObj = team1P.find(p => p.name === selectedName);
-    if (playerObj) {
-        team = team1;
-    } else {
-        playerObj = team2P.find(p => p.name === selectedName);
-        team = team2;
-    }
+team2P.forEach(player => {
+    const option = document.createElement("option");
+    option.value = player.name;
+    option.textContent = player.name;
+    dropDownT2.appendChild(option);
+});
 
+function fetchCommentaryT1() {
+    const selectedName = dropDownT1.value;
+    searchResultT1.innerHTML = '';
+    let playerObj = team1P.find(p => p.name === selectedName);
+    if (!playerObj) {
+        console.warn("No player found with that name.");
+        return;
+    }
     playerObj.commentary.forEach (comment =>{
-        searchResult.textContent(comment);
+        const entry = document.createElement('div');
+        entry.className = 'commentary-entry';
+        entry.textContent = comment;
+        searchResultT1.appendChild(entry);
+        searchResultT1.scrollTop = searchResultT1.scrollHeight;
     })
 }
+function fetchCommentaryT2() {
+    const selectedName = dropDownT2.value;
+    let playerObj = team2P.find(p => p.name === selectedName);
+    searchResultT2.innerHTML = '';
+    playerObj.commentary.forEach (comment =>{
+        const entry = document.createElement('div');
+        entry.className = 'commentary-entry';
+        entry.textContent = comment;
+        searchResultT2.appendChild(entry);
+        searchResultT2.scrollTop = searchResultT1.scrollHeight;
+    })
+}
+
+window.fetchCommentaryT1 = fetchCommentaryT1;
+window.fetchCommentaryT2 = fetchCommentaryT2;
