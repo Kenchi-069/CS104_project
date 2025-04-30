@@ -73,7 +73,9 @@ export class Bowler {
         }
         this.currentOverRuns = 0;
     }
-
+    er(){
+        return this.balls ? (this.runs/this.balls)*6 : 0;
+    }
     addComment(text){
         this.commentary.push(text)
     }

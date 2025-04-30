@@ -469,7 +469,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                 <td>${inactive.bowlers[cBowler].maidens}</td>
                                 <td>${inactive.bowlers[cBowler].runs}</td>
                                 <td>${inactive.bowlers[cBowler].wickets}</td>
-                                <td>${!inactive.bowlers[cBowler].runs/inactive.bowlers[cBowler].overs ? 0 :  (inactive.bowlers[cBowler].runs/inactive.bowlers[cBowler].balls*6).toFixed(2)}</td>
+                                <td>${inactive.bowlers[cBowler].er().toFixed(2)}</td>
                             </tr>
                         </tbody>
                     </table>
@@ -521,7 +521,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     <td>${bowler.maidens}</td>
                     <td>${bowler.runs}</td>
                     <td>${bowler.wickets}</td>
-                    <td>${!((bowler.runs/bowler.balls)*6) ? 0 :  ((bowler.runs/bowler.balls)*6).toFixed(2)}</td>
+                    <td>${bowler.er().toFixed(2)}</td>
                 </tr>
             `;
         });

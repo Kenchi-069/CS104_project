@@ -76,10 +76,10 @@
                 <thead>
                     <tr>
                         <th>Name</th>
-                        <th>Overs</th>
+                        <th>Balls</th>
                         <th>Runs</th>
                         <th>Wickets</th>
-                        <th>Econ</th>
+                        <th>Economy</th>
                     </tr>
                 </thead>
                 <tbody id="bowlersBody">
@@ -96,7 +96,7 @@
         let simulationInterval;
         let isSimulating = false;
         let simulationSpeed = 500;
-        let matchData = {
+        let matchInfo = {
             team1: null,
             team2: null,
             active: null,
@@ -126,7 +126,7 @@
         const bowlersBody = document.getElementById('bowlersBody');
 
         function initSimulation() {
-            console.log("Inside Init");
+
             const teamNames = [
                 "Pixel Strikers", "Code Warriors", "Binary Batters", 
                 "Algorithm Avengers", "Syntax Smashers", "Debug Dynamos"
@@ -135,44 +135,44 @@
             const randomName1 = teamNames[Math.floor(Math.random() * teamNames.length)];
             const randomName2 = teamNames.filter(name => name !== randomName1)[Math.floor(Math.random() * (teamNames.length - 1))];
             
-            matchData.team1 = new Team(randomName1, [], [], 0, 0, 0, 0, 0);
-            matchData.team2 = new Team(randomName2, [], [], 0, 0, 0, 0, 0);
+            matchInfo.team1 = new Team(randomName1, [], [], 0, 0, 0, 0, 0);
+            matchInfo.team2 = new Team(randomName2, [], [], 0, 0, 0, 0, 0);
 
-            const tossWinner = Math.random() > 0.5 ? matchData.team1 : matchData.team2;
+            const tossWinner = Math.random() > 0.5 ? matchInfo.team1 : matchInfo.team2;
             const tossDecision = Math.random() > 0.5 ? "bat" : "bowl";
             
-            if (tossWinner === matchData.team1) {
+            if (tossWinner === matchInfo.team1) {
                 if (tossDecision === "bat") {
-                    matchData.team1.batting = 1;
-                    matchData.team2.batting = 0;
+                    matchInfo.team1.batting = 1;
+                    matchInfo.team2.batting = 0;
                 } else {
-                    matchData.team1.batting = 0;
-                    matchData.team2.batting = 1;
+                    matchInfo.team1.batting = 0;
+                    matchInfo.team2.batting = 1;
                 }
             } else {
                 if (tossDecision === "bowl") {
-                    matchData.team1.batting = 0;
-                    matchData.team2.batting = 1;
+                    matchInfo.team1.batting = 0;
+                    matchInfo.team2.batting = 1;
                 } else {
-                    matchData.team1.batting = 1;
-                    matchData.team2.batting = 0;
+                    matchInfo.team1.batting = 1;
+                    matchInfo.team2.batting = 0;
                 }
             }
             
-            matchData.active = matchData.team1.batting ? matchData.team1 : matchData.team2;
-            matchData.inactive = matchData.team1.batting ? matchData.team2 : matchData.team1;
+            matchInfo.active = matchInfo.team1.batting ? matchInfo.team1 : matchInfo.team2;
+            matchInfo.inactive = matchInfo.team1.batting ? matchInfo.team2 : matchInfo.team1;
 
-            createPlayers(matchData.active, "Batter");
-            createPlayers(matchData.active, "Batter");
-            createPlayers(matchData.inactive, "Bowler");
+            createPlayers(matchInfo.active, "Batter");
+            createPlayers(matchInfo.active, "Batter");
+            createPlayers(matchInfo.inactive, "Bowler");
 
             updateTeamInfo();
-            addCommentary(`Match between ${matchData.team1.name} and ${matchData.team2.name} is ready`);
+            addCommentary(`Match between ${matchInfo.team1.name} and ${matchInfo.team2.name} is ready`);
             addCommentary(`Toss: ${tossWinner.name} wins and chooses to ${tossDecision} first`);
         }
 
         function createPlayers(team, type) {
-            console.log("Inside create players");
+
             const playerNames = [
                 "Alex", "Ben", "Chris", "David", "Ethan", "Frank", 
                 "George", "Henry", "Ian", "Jack", "Kevin", "Liam"
@@ -188,7 +188,7 @@
         }
 
         function startSimulation() {
-            console.log("Inside start simulation");
+
             if (isSimulating) return;
             
             isSimulating = true;
@@ -202,7 +202,7 @@
         }
 
         function pauseSimulation() {
-            console.log("Inside pause simulation");
+
             isSimulating = false;
             clearInterval(simulationInterval);
             startBtn.style.display = 'block';
@@ -212,10 +212,10 @@
         }
 
         function resetSimulation() {
-            console.log("Inside reset simulation");
+
             pauseSimulation();
             
-            matchData = {
+            matchInfo = {
                 team1: null,
                 team2: null,
                 active: null,
@@ -237,7 +237,6 @@
 
 
         function simulateBall() {
-            console.log("Inside simulate Ball");
 
             
             const outcomes = [
@@ -271,89 +270,88 @@
             processBall(selectedOutcome.runs);
             
             
-            matchData.currentBall++;
-            const totalProgress = (matchData.currentBall / (matchData.totalBalls * 2)) * 100;
+            matchInfo.currentBall++;
+            const totalProgress = (matchInfo.currentBall / (matchInfo.totalBalls * 2)) * 100;
             progressBar.style.width = `${totalProgress}%`;
         }
 
         
         function processBall(run) {
-            console.log("Inside process ball");
-            console.log(matchData.currentBall)
+
+
             
-            
-            matchData.active.addBall();
+            matchInfo.active.addBall();
             
             
             if (run === -1) { // Wicket
-                matchData.active.addWicket();
-                matchData.active.batters[matchData.sBatter].addBall();
-                matchData.inactive.bowlers[matchData.cBowler].addWicket();
-                matchData.inactive.bowlers[matchData.cBowler].addBall();
-                createPlayers(matchData.active, "Batter");
-                addCommentary(`WICKET! ${matchData.inactive.bowlers[matchData.cBowler].name} takes the wicket of ${matchData.active.batters[matchData.sBatter].name}`);
-                matchData.inactive.bowlers[matchData.cBowler].addComment(`WICKET! ${matchData.inactive.bowlers[matchData.cBowler].name} takes the wicket of ${matchData.active.batters[matchData.sBatter].name}`);
-                matchData.active.batters[matchData.sBatter].addComment(`WICKET! ${matchData.inactive.bowlers[matchData.cBowler].name} takes the wicket of ${matchData.active.batters[matchData.sBatter].name}`);
+                matchInfo.active.addWicket();
+                matchInfo.active.batters[matchInfo.sBatter].addBall();
+                matchInfo.inactive.bowlers[matchInfo.cBowler].addWicket();
+                matchInfo.inactive.bowlers[matchInfo.cBowler].addBall();
+                createPlayers(matchInfo.active, "Batter");
+                addCommentary(`WICKET! ${matchInfo.inactive.bowlers[matchInfo.cBowler].name} takes the wicket of ${matchInfo.active.batters[matchInfo.sBatter].name}`);
+                matchInfo.inactive.bowlers[matchInfo.cBowler].addComment(`WICKET! ${matchInfo.inactive.bowlers[matchInfo.cBowler].name} takes the wicket of ${matchInfo.active.batters[matchInfo.sBatter].name}`);
+                matchInfo.active.batters[matchInfo.sBatter].addComment(`WICKET! ${matchInfo.inactive.bowlers[matchInfo.cBowler].name} takes the wicket of ${matchInfo.active.batters[matchInfo.sBatter].name}`);
                 
-                if (matchData.active.wickets >= 10) {
-                    addCommentary(`All out! ${matchData.active.name} finishes at ${matchData.active.runs}/${matchData.active.wickets}`);
+                if (matchInfo.active.wickets >= 10) {
+                    addCommentary(`All out! ${matchInfo.active.name} finishes at ${matchInfo.active.runs}/${matchInfo.active.wickets}`);
                     return;
                 }
                 
                 
-                matchData.sBatter = matchData.active.batters.length - 1;
-                const newBatter = matchData.active.batters[matchData.sBatter];
-                console.log(matchData.sBatter)
-                addCommentary(`New batter ${matchData.active.batters[matchData.sBatter].name} comes to the crease`);
-                matchData.active.batters[matchData.sBatter].addComment(`New batter ${matchData.active.batters[matchData.sBatter].name} comes to the crease`);
+                matchInfo.sBatter = matchInfo.active.batters.length - 1;
+                const newBatter = matchInfo.active.batters[matchInfo.sBatter];
+
+                addCommentary(`New batter ${matchInfo.active.batters[matchInfo.sBatter].name} comes to the crease`);
+                matchInfo.active.batters[matchInfo.sBatter].addComment(`New batter ${matchInfo.active.batters[matchInfo.sBatter].name} comes to the crease`);
             } else if (run === 7) { 
-                matchData.active.runs++;
-                matchData.active.balls--; 
-                matchData.active.batters[matchData.sBatter].addRun(1);
-                matchData.inactive.bowlers[matchData.cBowler].addRun(1);
+                matchInfo.active.runs++;
+                matchInfo.active.balls--; 
+                matchInfo.active.batters[matchInfo.sBatter].addRun(1);
+                matchInfo.inactive.bowlers[matchInfo.cBowler].addRun(1);
                 
                 addCommentary(`WIDE! ${bowler.name} bowls a wide, extra run given`);
-                matchData.inactive.bowlers[matchData.cBowler].addComment(`WIDE! ${bowler.name} bowls a wide, extra run given`);
+                matchInfo.inactive.bowlers[matchInfo.cBowler].addComment(`WIDE! ${bowler.name} bowls a wide, extra run given`);
             } else {
-                matchData.active.runs += run;
-                matchData.active.batters[matchData.sBatter].addRun(run);
-                matchData.active.batters[matchData.sBatter].addBall();
-                matchData.inactive.bowlers[matchData.cBowler].addBall();
-                matchData.inactive.bowlers[matchData.cBowler].addRun(run);
+                matchInfo.active.runs += run;
+                matchInfo.active.batters[matchInfo.sBatter].addRun(run);
+                matchInfo.active.batters[matchInfo.sBatter].addBall();
+                matchInfo.inactive.bowlers[matchInfo.cBowler].addBall();
+                matchInfo.inactive.bowlers[matchInfo.cBowler].addRun(run);
                 
                 if (run === 0) {
-                    addCommentary(`Good ball by ${matchData.inactive.bowlers[matchData.cBowler].name}, dot ball`);
-                    matchData.inactive.bowlers[matchData.cBowler].addComment(`Good ball by ${matchData.inactive.bowlers[matchData.cBowler].name}, dot ball`);
+                    addCommentary(`Good ball by ${matchInfo.inactive.bowlers[matchInfo.cBowler].name}, dot ball`);
+                    matchInfo.inactive.bowlers[matchInfo.cBowler].addComment(`Good ball by ${matchInfo.inactive.bowlers[matchInfo.cBowler].name}, dot ball`);
                 } else if (run === 4) {
-                    addCommentary(`FOUR! ${matchData.active.batters[matchData.sBatter].name} hits a boundary off ${matchData.inactive.bowlers[matchData.cBowler].name}`);
-                    matchData.active.batters[matchData.sBatter].addComment(`FOUR! ${matchData.active.batters[matchData.sBatter].name} hits a boundary off ${matchData.inactive.bowlers[matchData.cBowler].name}`);
-                    matchData.inactive.bowlers[matchData.cBowler].addComment(`FOUR! ${matchData.active.batters[matchData.sBatter].name} hits a boundary off ${matchData.inactive.bowlers[matchData.cBowler].name}`);
+                    addCommentary(`FOUR! ${matchInfo.active.batters[matchInfo.sBatter].name} hits a boundary off ${matchInfo.inactive.bowlers[matchInfo.cBowler].name}`);
+                    matchInfo.active.batters[matchInfo.sBatter].addComment(`FOUR! ${matchInfo.active.batters[matchInfo.sBatter].name} hits a boundary off ${matchInfo.inactive.bowlers[matchInfo.cBowler].name}`);
+                    matchInfo.inactive.bowlers[matchInfo.cBowler].addComment(`FOUR! ${matchInfo.active.batters[matchInfo.sBatter].name} hits a boundary off ${matchInfo.inactive.bowlers[matchInfo.cBowler].name}`);
                 } else if (run === 6) {
-                    addCommentary(`SIX! ${matchData.active.batters[matchData.sBatter].name} smashes ${matchData.inactive.bowlers[matchData.cBowler].name} for a maximum`);
-                    matchData.active.batters[matchData.sBatter].addComment(`SIX! ${matchData.active.batters[matchData.sBatter].name} smashes ${matchData.inactive.bowlers[matchData.cBowler].name} for a maximum`);
-                    matchData.inactive.bowlers[matchData.cBowler].addComment(`SIX! ${matchData.active.batters[matchData.sBatter].name} smashes ${matchData.inactive.bowlers[matchData.cBowler].name} for a maximum`);
+                    addCommentary(`SIX! ${matchInfo.active.batters[matchInfo.sBatter].name} smashes ${matchInfo.inactive.bowlers[matchInfo.cBowler].name} for a maximum`);
+                    matchInfo.active.batters[matchInfo.sBatter].addComment(`SIX! ${matchInfo.active.batters[matchInfo.sBatter].name} smashes ${matchInfo.inactive.bowlers[matchInfo.cBowler].name} for a maximum`);
+                    matchInfo.inactive.bowlers[matchInfo.cBowler].addComment(`SIX! ${matchInfo.active.batters[matchInfo.sBatter].name} smashes ${matchInfo.inactive.bowlers[matchInfo.cBowler].name} for a maximum`);
                 } else {
-                    addCommentary(`${run} run${run > 1 ? 's' : ''} taken by ${matchData.active.batters[matchData.sBatter].name}`);
-                    matchData.active.batters[matchData.sBatter].addComment(`${run} run${run > 1 ? 's' : ''} taken by ${matchData.active.batters[matchData.sBatter].name}`);
+                    addCommentary(`${run} run${run > 1 ? 's' : ''} taken by ${matchInfo.active.batters[matchInfo.sBatter].name}`);
+                    matchInfo.active.batters[matchInfo.sBatter].addComment(`${run} run${run > 1 ? 's' : ''} taken by ${matchInfo.active.batters[matchInfo.sBatter].name}`);
                 }
 
                 if (run % 2 === 1) {
-                    [matchData.sBatter, matchData.nBatter] = [matchData.nBatter, matchData.sBatter];
+                    [matchInfo.sBatter, matchInfo.nBatter] = [matchInfo.nBatter, matchInfo.sBatter];
                 }
             }
-                if (matchData.active.balls % 6 === 0 && matchData.active.balls !== 0) {
-                matchData.inactive.bowlers[matchData.cBowler].addOver();
-                [matchData.sBatter, matchData.nBatter] = [matchData.nBatter, matchData.sBatter];
-                createPlayers(matchData.inactive, "Bowler");
+                if (matchInfo.active.balls % 6 === 0 && matchInfo.active.balls !== 0) {
+                matchInfo.inactive.bowlers[matchInfo.cBowler].addOver();
+                [matchInfo.sBatter, matchInfo.nBatter] = [matchInfo.nBatter, matchInfo.sBatter];
+                createPlayers(matchInfo.inactive, "Bowler");
  
-                matchData.cBowler = (matchData.cBowler + 1) % matchData.inactive.bowlers.length;
-                const newBowler = matchData.inactive.bowlers[matchData.cBowler];
+                matchInfo.cBowler = (matchInfo.cBowler + 1) % matchInfo.inactive.bowlers.length;
+                const newBowler = matchInfo.inactive.bowlers[matchInfo.cBowler];
                 
-                addCommentary(`Over completed. New bowler ${matchData.inactive.bowlers[matchData.cBowler].name} comes into the attack`);
-                matchData.inactive.bowlers[matchData.cBowler].addComment(`Over completed. New bowler ${matchData.inactive.bowlers[matchData.cBowler].name} comes into the attack`);
+                addCommentary(`Over completed. New bowler ${matchInfo.inactive.bowlers[matchInfo.cBowler].name} comes into the attack`);
+                matchInfo.inactive.bowlers[matchInfo.cBowler].addComment(`Over completed. New bowler ${matchInfo.inactive.bowlers[matchInfo.cBowler].name} comes into the attack`);
             }
-            if (matchData.active.balls === matchData.overs * 6 || matchData.active.wickets >= 10 || (matchData.inactive.played && matchData.active.runs > matchData.inactive.runs)) {
-                if (!matchData.inactive.played) {
+            if (matchInfo.active.balls === matchInfo.overs * 6 || matchInfo.active.wickets >= 10 || (matchInfo.inactive.played && matchInfo.active.runs > matchInfo.inactive.runs)) {
+                if (!matchInfo.inactive.played) {
                     changeInnings();
                     return;
                 }
@@ -365,40 +363,40 @@
 
 
         function changeInnings() {
-            console.log("Inside change innings");
-            matchData.active.played = 1;
-            [matchData.active, matchData.inactive] = [matchData.inactive, matchData.active];
-            matchData.active.batting = 1;
-            matchData.inactive.batting = 0;
+
+            matchInfo.active.played = 1;
+            [matchInfo.active, matchInfo.inactive] = [matchInfo.inactive, matchInfo.active];
+            matchInfo.active.batting = 1;
+            matchInfo.inactive.batting = 0;
             
-            matchData.sBatter = 0;
-            matchData.nBatter = 1;
-            matchData.cBowler = 0;
+            matchInfo.sBatter = 0;
+            matchInfo.nBatter = 1;
+            matchInfo.cBowler = 0;
 
-            createPlayers(matchData.active, "Batter");
-            createPlayers(matchData.active, "Batter");
-            createPlayers(matchData.inactive, "Bowler");
+            createPlayers(matchInfo.active, "Batter");
+            createPlayers(matchInfo.active, "Batter");
+            createPlayers(matchInfo.inactive, "Bowler");
 
-            addCommentary(`Innings break! ${matchData.inactive.name} scored ${matchData.inactive.runs}/${matchData.inactive.wickets}`);
-            addCommentary(`${matchData.active.name} needs ${matchData.inactive.runs + 1} runs to win`);
+            addCommentary(`Innings break! ${matchInfo.inactive.name} scored ${matchInfo.inactive.runs}/${matchInfo.inactive.wickets}`);
+            addCommentary(`${matchInfo.active.name} needs ${matchInfo.inactive.runs + 1} runs to win`);
             
             updateTeamInfo();
         }
 
 
         function endMatch() {
-            console.log("Inside end match");
+
             pauseSimulation();
             
-            const winner = won(matchData.team1, matchData.team2);
+            const winner = won(matchInfo.team1, matchInfo.team2);
             let resultMessage;
             if (winner === 0) {
-                resultMessage = `Match tied! Both teams scored ${matchData.team1.runs} runs`;
+                resultMessage = `Match tied! Both teams scored ${matchInfo.team1.runs} runs`;
             } else {
-                const firstBatter = matchData.team1.batting ? matchData.team1.name : matchData.team2.name;
+                const firstBatter = matchInfo.team1.batting ? matchInfo.team1.name : matchInfo.team2.name;
                 
                 if (winner.name === firstBatter) {
-                    const margin = matchData.team1.runs - matchData.team2.runs;
+                    const margin = matchInfo.team1.runs - matchInfo.team2.runs;
                     resultMessage = `${winner.name} wins by ${margin} run${margin > 1 ? 's' : ''}`;
                 } else {
                     const wicketsLeft = 10 - winner.wickets;
@@ -407,24 +405,23 @@
             }
             const matchD = new Match(
                 Match.generateID(),
-                matchData.team1.name,
-                matchData.team2.name,
+                matchInfo.team1.name,
+                matchInfo.team2.name,
                 winner === 0 ? "Draw" : winner.name,
-                `${matchData.team1.runs}/${matchData.team1.wickets}`,
-                `${matchData.team2.runs}/${matchData.team2.wickets}`
+                `${matchInfo.team1.runs}/${matchInfo.team1.wickets}`,
+                `${matchInfo.team2.runs}/${matchInfo.team2.wickets}`
             );
 
             let storedMatches = JSON.parse(localStorage.getItem("matches")) || [];
             storedMatches.push(matchD);
             localStorage.setItem("matches", JSON.stringify(storedMatches));
 
-            console.log("[DEBUG] Match saved:", matchData);
             addCommentary(`MATCH OVER! ${resultMessage}`);
             
 
             addCommentary(`Final scores:`);
-            addCommentary(`${matchData.team1.name}: ${matchData.team1.runs}/${matchData.team1.wickets} in ${Math.floor(matchData.team1.balls/6)}.${matchData.team1.balls%6} overs`);
-            addCommentary(`${matchData.team2.name}: ${matchData.team2.runs}/${matchData.team2.wickets} in ${Math.floor(matchData.team2.balls/6)}.${matchData.team2.balls%6} overs`);
+            addCommentary(`${matchInfo.team1.name}: ${matchInfo.team1.runs}/${matchInfo.team1.wickets} in ${Math.floor(matchInfo.team1.balls/6)}.${matchInfo.team1.balls%6} overs`);
+            addCommentary(`${matchInfo.team2.name}: ${matchInfo.team2.runs}/${matchInfo.team2.wickets} in ${Math.floor(matchInfo.team2.balls/6)}.${matchInfo.team2.balls%6} overs`);
 
             updateTeamInfo();
             updatePlayerStats();
@@ -433,17 +430,17 @@
 
 
         function updateTeamInfo() {
-            console.log("Inside update team info");
-            team1Name.textContent = matchData.team1.name;
-            team1Runs.textContent = `${matchData.team1.runs}/${matchData.team1.wickets}`;
-            team1Overs.textContent = `(${Math.floor(matchData.team1.balls/6)}.${matchData.team1.balls%6} overs)`;
+
+            team1Name.textContent = matchInfo.team1.name;
+            team1Runs.textContent = `${matchInfo.team1.runs}/${matchInfo.team1.wickets}`;
+            team1Overs.textContent = `(${Math.floor(matchInfo.team1.balls/6)}.${matchInfo.team1.balls%6} overs)`;
             
-            team2Name.textContent = matchData.team2.name;
-            team2Runs.textContent = `${matchData.team2.runs}/${matchData.team2.wickets}`;
-            team2Overs.textContent = `(${Math.floor(matchData.team2.balls/6)}.${matchData.team2.balls%6} overs)`;
+            team2Name.textContent = matchInfo.team2.name;
+            team2Runs.textContent = `${matchInfo.team2.runs}/${matchInfo.team2.wickets}`;
+            team2Overs.textContent = `(${Math.floor(matchInfo.team2.balls/6)}.${matchInfo.team2.balls%6} overs)`;
             
 
-            if (matchData.active === matchData.team1) {
+            if (matchInfo.active === matchInfo.team1) {
                 document.getElementById('team1Score').style.border = '2px solid #d4af37';
                 document.getElementById('team2Score').style.border = '2px solid #444';
             } else {
@@ -453,10 +450,9 @@
         }
 
         function updatePlayerStats() {
-            console.log("Inside update player stats");
             battersBody.innerHTML = '';
-            const striker = matchData.active.batters[matchData.sBatter];
-            const nonStriker = matchData.active.batters[matchData.nBatter];
+            const striker = matchInfo.active.batters[matchInfo.sBatter];
+            const nonStriker = matchInfo.active.batters[matchInfo.nBatter];
             
             if (striker) {
                 battersBody.innerHTML += `
@@ -465,7 +461,7 @@
                         <td>${striker.name}</td>
                         <td>${striker.runs}</td>
                         <td>${striker.balls}</td>
-                        <td>${striker.crr().toFixed(2)}</td>
+                        <td>${striker.sr().toFixed(2)}</td>
                     </tr>
                 `;
             }
@@ -477,25 +473,24 @@
                         <td>${nonStriker.name}</td>
                         <td>${nonStriker.runs}</td>
                         <td>${nonStriker.balls}</td>
-                        <td>${nonStriker.crr().toFixed(2)}</td>
+                        <td>${nonStriker.sr().toFixed(2)}</td>
                     </tr>
                 `;
             }
             
 
             bowlersBody.innerHTML = '';
-            const bowler = matchData.inactive.bowlers[matchData.cBowler];
+            const bowler = matchInfo.inactive.bowlers[matchInfo.cBowler];
             
             if (bowler) {
-                const economy = bowler.overs > 0 ? (bowler.runs / bowler.overs).toFixed(2) : '0.00';
                 
                 bowlersBody.innerHTML += `
                     <tr>
                         <td>${bowler.name}</td>
-                        <td>${bowler.overs}</td>
+                        <td>${bowler.balls}</td>
                         <td>${bowler.runs}</td>
                         <td>${bowler.wickets}</td>
-                        <td>${economy}</td>
+                        <td>${bowler.er().toFixed(2)}</td>
                     </tr>
                 `;
             }
